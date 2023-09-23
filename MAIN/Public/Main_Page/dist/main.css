@@ -1,0 +1,58 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+body::-webkit-scrollbar {
+  width: 0.6em;
+  transition: all 0.2s ease-in-out;
+}
+body::-webkit-scrollbar-track {
+  background: #4976f3;
+  margin-block: 0.5em;
+  border-radius: 10px;
+  transition: all 0.2s ease-in-out;
+}
+body::-webkit-scrollbar-thumb {
+  background: rgba(25, 54, 72, 0.7);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+body::-webkit-scrollbar-thumb:hover {
+  background: #070326;
+}
+
+#backVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+#logo {
+  color: white;
+  text-shadow: 0 0 10px black;
+  font-family: fantasy;
+  animation: move 10s infinite alternate;
+  margin: 0;
+  font-size: 50px;
+}
+@keyframes move {
+  0% {
+    transform: scale(1) rotate(0deg) translate(0px, 0px);
+  }
+  25% {
+    transform: scale(1.04) rotate(5deg) translate(5px, 5px);
+  }
+  75% {
+    transform: scale(1.04) rotate(-5deg) translate(5px, 5px);
+  }
+  100% {
+    transform: scale(1) rotate(0deg) translate(0px, 0px);
+  }
+}
