@@ -1,0 +1,1 @@
+All the files like img and video for the html/css design would be stored in this folder
