@@ -36,26 +36,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.registerUser = void 0;
+exports.login = exports.register = void 0;
 var userModel_1 = require("./userModel");
 var bcrypt = require('bcrypt');
 var jwt = require('jwt-simple');
 var SECRET = process.env.SECRET;
 var secret = SECRET;
 var saltRounds = 10;
-exports.registerUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, name, email, password, hash, user, userDB, error_1;
+exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, email, password, hash, user, userDB, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _b.trys.push([0, 3, , 4]);
-                _a = req.body, name = _a.name, email = _a.email, password = _a.password;
-                if (!email || !password || !name)
+                _a = req.body, email = _a.email, password = _a.password;
+                if (!email || !password)
                     throw new Error("Please complete all fields");
                 return [4 /*yield*/, bcrypt.hash(password, saltRounds)];
             case 1:
                 hash = _b.sent();
-                user = new userModel_1.UserModelDB({ name: name, email: email, password: hash });
+                user = new userModel_1.UserModelDB({ email: email, password: hash });
                 return [4 /*yield*/, user.save()];
             case 2:
                 userDB = _b.sent();
@@ -66,6 +66,46 @@ exports.registerUser = function (req, res) { return __awaiter(void 0, void 0, vo
                 error_1 = _b.sent();
                 console.error(error_1);
                 res.send({ error: error_1.message });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, email, password, userDB, hash, match, cookie, token, error_2;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _b.trys.push([0, 3, , 4]);
+                _a = req.body, email = _a.email, password = _a.password;
+                if (!email || !password)
+                    throw new Error("Please complete all fields");
+                return [4 /*yield*/, userModel_1.UserModelDB.findOne({ email: email })];
+            case 1:
+                userDB = _b.sent();
+                if (!userDB)
+                    throw new Error("some of the details are incorrect");
+                hash = userDB.password;
+                if (!hash)
+                    throw new Error("some of the details are incorrect");
+                return [4 /*yield*/, bcrypt.compare(password, hash)];
+            case 2:
+                match = _b.sent();
+                if (!match)
+                    throw new Error("some of the details are incorrect");
+                cookie = {
+                    uid: userDB._id,
+                    admin: userDB.admin
+                };
+                token = jwt.encode(cookie, secret);
+                console.log(token);
+                res.cookie("user", token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 48 });
+                res.send({ ok: true });
+                return [3 /*break*/, 4];
+            case 3:
+                error_2 = _b.sent();
+                console.error(error_2);
+                res.status(401).send({ error: error_2.message });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }

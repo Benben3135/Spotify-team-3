@@ -3,9 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../dist/index.css">
+    <script src="./dist/register.js" defer></script>
     <title>REGISTER</title>
 </head>
 <body>
-    
+    <div class="signIn">
+        <form onsubmit="handleRegister(event)">
+            <img id="logo" src="../Files_To_Use/melodica__1_-removebg-preview.png" alt="">
+            <label for="name">name</label>
+            <input type="text" name="name" id="name" placeholder="name">
+            <label for="email">email</label>
+            <input type="text" name="email" id="email" placeholder="email">
+            <label for="password">password</label>
+            <input type="password" name="password" id="password" placeholder="password">
+            <input type="submit" value="submit" id="submit">
+            <img src="../Files_To_Use/" alt="">
+        </form>
+    </div>
 </body>
 </html>
