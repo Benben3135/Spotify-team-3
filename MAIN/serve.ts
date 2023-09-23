@@ -22,13 +22,14 @@ const {MONGO_URI} = process.env;
 mongoose.connect(MONGO_URI).then(()=>{
   console.info("MongoDB connected")
 })
+
 .catch(err=>{
   console.error(err)
 })
 
 
-import userRouters from "./API/users/userRouter";
-app.use("/API/users", userRouters);
+import userRouter from "./API/users/userRouter";
+app.use("/API/users", userRouter);
 
 
 

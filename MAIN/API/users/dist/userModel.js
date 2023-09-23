@@ -1,18 +1,26 @@
 "use strict";
 exports.__esModule = true;
-exports.UserModelDB = exports.UserSchema = void 0;
+exports.UserModelDB = exports.UserSchema = exports.User = void 0;
 //define a scheme
 var mongoose_1 = require("mongoose");
-// DB models
-//model for user, conatains its:
-//  name (for DOM manipulations like greeting)
-// email (for authintication and as identifier)
-// password (for authintication)
-//admin Boolean propertie, to check if the user can add new song and etc.
-//created at- a propertie automatically creates in the DB to know when the user has been created. will be used in info section.
+var User = /** @class */ (function () {
+    function User(name, email, password, admin, createdAt) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.admin = admin;
+        this.createdAt = createdAt;
+    }
+    return User;
+}());
+exports.User = User;
 exports.UserSchema = new mongoose_1.Schema({
     name: String,
-    email: String,
+    email: {
+        type: String,
+        require: true,
+        unique: true
+    },
     password: String,
     admin: {
         type: Boolean,

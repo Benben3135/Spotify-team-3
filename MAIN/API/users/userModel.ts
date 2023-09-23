@@ -3,16 +3,25 @@ import { Schema, model } from 'mongoose';
 
 
 
-// DB models
-//model for user, conatains its:
-//  name (for DOM manipulations like greeting)
-// email (for authintication and as identifier)
-// password (for authintication)
-//admin Boolean propertie, to check if the user can add new song and etc.
-//created at- a propertie automatically creates in the DB to know when the user has been created. will be used in info section.
+export class User{
+  constructor(
+    public name: string,
+    public email: string,
+    public password: string,
+    public admin: boolean,
+    public createdAt:Date
+    ){}
+}
+
+
+
 export const UserSchema = new Schema({
   name: String,
-  email: String,
+  email: {
+    type: String,
+    require: true,
+    unique:true
+  },
   password: String,
   admin: {
     type: Boolean,
