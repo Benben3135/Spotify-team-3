@@ -12,8 +12,8 @@ join collection:
 2) Artist-songs
 
 controllers:
-1) is creator?
-2) is admin? (user that can delete users)
+1) is creator? - done by tamar
+2) is admin? (user that can delete users) - done by benjamon
 3) get user-songs (all the songs in his list)
 4) get creator-songs (only the songs that he created)
 5) add song to user list
@@ -25,5 +25,6 @@ controllers:
 11) get special offer songs to user by his last choses
 12) get special offer songs to user by his most listening songs
 13) get special offer songs to user by the genre he like
+14) delete user (only admin can) - done by tamar
 
 view:

@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.login = exports.register = void 0;
+exports.deleteUser = exports.getUser = exports.login = exports.register = void 0;
 var userModel_1 = require("./userModel");
 var bcrypt = require('bcrypt');
 var jwt = require('jwt-simple');
@@ -60,7 +60,7 @@ exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0
             case 2:
                 userDB = _b.sent();
                 console.log(userDB);
-                res.send({ ok: true, userDB: userDB });
+                res.send({ ok: true, userDB: userDB }); //why we nead to send the userDB after register?
                 return [3 /*break*/, 4];
             case 3:
                 error_1 = _b.sent();
@@ -95,7 +95,8 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                     throw new Error("some of the details are incorrect");
                 cookie = {
                     uid: userDB._id,
-                    admin: userDB.admin
+                    admin: userDB.admin,
+                    artisr: userDB.artist
                 };
                 token = jwt.encode(cookie, secret);
                 console.log(token);
@@ -111,3 +112,62 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
         }
     });
 }); };
+//get user by cookie data
+function getUser(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var userId, userDB, error_3;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    userId = req.cookies.user.uid;
+                    if (!userId)
+                        throw new Error("no user in cookies");
+                    return [4 /*yield*/, userModel_1.UserModelDB.findById(userId)];
+                case 1:
+                    userDB = _a.sent();
+                    if (!userDB)
+                        throw new Error("user dosn't exist in DB");
+                    res.send({ ok: true, users: userDB });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_3 = _a.sent();
+                    console.error(error_3);
+                    res.status(500).send({ error: error_3.message });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.getUser = getUser;
+//delete user (only admin can)
+function deleteUser(req, res) {
+    return __awaiter(this, void 0, void 0, function () {
+        var userId, error_4;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 3]);
+                    userId = req.cookies.user.uid;
+                    if (!userId)
+                        throw new Error("no user id in cookies");
+                    //find user by id and delete
+                    return [4 /*yield*/, userModel_1.UserModelDB.findByIdAndDelete(userId)];
+                case 1:
+                    //find user by id and delete
+                    _a.sent();
+                    // Send ok if succead
+                    res.send({ ok: true });
+                    return [3 /*break*/, 3];
+                case 2:
+                    error_4 = _a.sent();
+                    console.error(error_4);
+                    res.status(500).send({ error: error_4.message });
+                    return [3 /*break*/, 3];
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+exports.deleteUser = deleteUser;

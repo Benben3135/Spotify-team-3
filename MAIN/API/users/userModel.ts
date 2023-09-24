@@ -1,14 +1,13 @@
 //define a scheme
 import { Schema, model } from 'mongoose';
 
-
-
 export class User{
   constructor(
     public name: string,
     public email: string,
     public password: string,
     public admin: boolean,
+    public artist: boolean,
     public createdAt:Date
     ){}
 }
@@ -27,6 +26,10 @@ export const UserSchema = new Schema({
     type: Boolean,
     default: false
   },
+  artist: {
+    type: Boolean,
+    default: false
+  },
   createdAt: {
     type: Date,
     immutable: true,
@@ -34,6 +37,7 @@ export const UserSchema = new Schema({
   },
 
 });
+
 export default UserSchema;
 
 export const UserModelDB = model("users", UserSchema)

@@ -32,8 +32,6 @@ import userRouter from "./API/users/userRouter";
 app.use("/API/users", userRouter);
 
 
-
-
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
