@@ -12,7 +12,7 @@ async function handleRegister(ev: any) {
     const email = ev.target.email.value;
     const password = ev.target.password.value;
     const user = { name, email, password };
-    const response = await fetch("API/users/send-email", {
+    const response = await fetch("API/users/sendEmail", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

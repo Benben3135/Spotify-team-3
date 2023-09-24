@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post("/login" ,login)
 .post("/register", register)
-.post("/send-email", sendEmail)
+.post("/sendEmail", sendEmail)
 ;
    
 

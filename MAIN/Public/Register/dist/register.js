@@ -47,7 +47,7 @@ function handleRegister(ev) {
                     email = ev.target.email.value;
                     password = ev.target.password.value;
                     user = { name: name, email: email, password: password };
-                    return [4 /*yield*/, fetch("API/users/send-email", {
+                    return [4 /*yield*/, fetch("API/users/sendEmail", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json"

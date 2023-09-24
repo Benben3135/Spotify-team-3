@@ -5,5 +5,5 @@ var userCont_1 = require("./userCont");
 var router = express_1["default"].Router();
 router.post("/login", userCont_1.login)
     .post("/register", userCont_1.register)
-    .post("/send-email", userCont_1.sendEmail);
+    .post("/sendEmail", userCont_1.sendEmail);
 exports["default"] = router;
