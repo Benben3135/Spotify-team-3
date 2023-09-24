@@ -23,6 +23,7 @@ export const login = async (req: any, res: any) => {
     if (!match) throw new Error("some of the details are incorrect");
 
     const cookie = {
+      email: userDB.email,
       uid: userDB._id,
       admin: userDB.admin,
     }
@@ -46,7 +47,7 @@ export const register = async (req: any, res: any) => {
 
     const hash = await bcrypt.hash(password, saltRounds);
 
-    const user = new UserModelDB({ email, password: hash });
+    const user = new UserModelDB({ name ,email, password: hash });
     const userDB = await user.save();
     console.log(userDB)
    
@@ -60,6 +61,23 @@ export const register = async (req: any, res: any) => {
 
 
 
+export const getUser = async (req: any, res: any) => {
+  try {
+    const token = req.cookies.user;
+    if(!token) throw new Error("no token");
+    const cookie = jwt.decode(token, secret);
+    //decoded cookie
+    const {email} = cookie;
+    console.log(email)
+    const userDB = await UserModelDB.findOne({email});
+    console.log(userDB)
+ 
+    res.send(userDB);
+  } catch (error) {
+    console.error(error);
+    res.send({ error: error.message });
+  }
+}
 
 
 

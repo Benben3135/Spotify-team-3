@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.register = exports.login = void 0;
+exports.getUser = exports.register = exports.login = void 0;
 var userModel_1 = require("./userModel");
 var bcrypt = require('bcrypt');
 var jwt = require('jwt-simple');
@@ -66,6 +66,7 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 if (!match)
                     throw new Error("some of the details are incorrect");
                 cookie = {
+                    email: userDB.email,
                     uid: userDB._id,
                     admin: userDB.admin
                 };
@@ -95,7 +96,7 @@ exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0
                 return [4 /*yield*/, bcrypt.hash(password, saltRounds)];
             case 1:
                 hash = _b.sent();
-                user = new userModel_1.UserModelDB({ email: email, password: hash });
+                user = new userModel_1.UserModelDB({ name: name, email: email, password: hash });
                 return [4 /*yield*/, user.save()];
             case 2:
                 userDB = _b.sent();
@@ -108,6 +109,33 @@ exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0
                 res.send({ error: error_2.message });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var token, cookie, email, userDB, error_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                token = req.cookies.user;
+                if (!token)
+                    throw new Error("no token");
+                cookie = jwt.decode(token, secret);
+                email = cookie.email;
+                console.log(email);
+                return [4 /*yield*/, userModel_1.UserModelDB.findOne({ email: email })];
+            case 1:
+                userDB = _a.sent();
+                console.log(userDB);
+                res.send(userDB);
+                return [3 /*break*/, 3];
+            case 2:
+                error_3 = _a.sent();
+                console.error(error_3);
+                res.send({ error: error_3.message });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };

@@ -1,11 +1,12 @@
 import express from 'express'
-import { login , register } from './userCont';
+import { login , register , getUser } from './userCont';
 import { isAdmin } from './userMiddlewear';
 const userRouter = express.Router();
 
 
 userRouter.post("/login" ,login)
 .post("/register" , register)
+.get("/get-User" , getUser)
 ;
    
 
