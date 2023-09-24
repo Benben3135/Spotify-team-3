@@ -56,7 +56,9 @@ function handleSignIn(ev) {
                     return [4 /*yield*/, response.json()];
                 case 2:
                     data = _a.sent();
-                    console.log(data);
+                    if (data.error)
+                        throw new Error(data.error);
+                    window.location.href = "Main/main.html";
                     return [3 /*break*/, 4];
                 case 3:
                     error_1 = _a.sent();

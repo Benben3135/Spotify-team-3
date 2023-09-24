@@ -11,7 +11,8 @@ async function handleSignIn(ev:any){
             body: JSON.stringify({email,password}),
         });
         const data = await response.json();
-        console.log(data)
+        if (data.error) throw new Error(data.error);
+        window.location.href = "Main/main.html";
     } catch (error) {
         console.error(error)
     }

@@ -36,47 +36,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.sendEmail = exports.login = exports.register = void 0;
+exports.register = exports.login = void 0;
 var userModel_1 = require("./userModel");
-//The nodemailer package is a popular Node.js library that allows you to send email from your Node.js applications.
-// terminal:
-// npm install nodemailer crypto
-var nodemailer = require("nodemailer");
 var bcrypt = require('bcrypt');
 var jwt = require('jwt-simple');
 var SECRET = process.env.SECRET;
 var secret = SECRET;
 var saltRounds = 10;
-exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, email, password, hash, user, userDB, error_1;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                _b.trys.push([0, 3, , 4]);
-                _a = req.body, email = _a.email, password = _a.password;
-                if (!email || !password)
-                    throw new Error("Please complete all fields");
-                return [4 /*yield*/, bcrypt.hash(password, saltRounds)];
-            case 1:
-                hash = _b.sent();
-                user = new userModel_1.UserModelDB({ email: email, password: hash });
-                return [4 /*yield*/, user.save()];
-            case 2:
-                userDB = _b.sent();
-                console.log(userDB);
-                res.send({ ok: true, userDB: userDB });
-                return [3 /*break*/, 4];
-            case 3:
-                error_1 = _b.sent();
-                console.error(error_1);
-                res.send({ error: error_1.message });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
-        }
-    });
-}); };
 exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, email, password, userDB, hash, match, cookie, token, error_2;
+    var _a, email, password, userDB, hash, match, cookie, token, error_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
@@ -107,79 +75,39 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 res.send({ ok: true });
                 return [3 /*break*/, 4];
             case 3:
-                error_2 = _b.sent();
-                console.error(error_2);
-                res.status(401).send({ error: error_2.message });
+                error_1 = _b.sent();
+                console.error(error_1);
+                res.status(401).send({ error: error_1.message });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
     });
 }); };
-exports.sendEmail = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var email, confirmationCode;
-    return __generator(this, function (_a) {
-        try {
-            console.log("i started!");
-            email = req.body.email;
-            if (!email)
-                throw new Error("Please complete all fields");
-            confirmationCode = sendMail(email);
-            res.send(confirmationCode);
+exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var _a, name, email, password, hash, user, userDB, error_2;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _b.trys.push([0, 3, , 4]);
+                _a = req.body, name = _a.name, email = _a.email, password = _a.password;
+                if (!email || !password)
+                    throw new Error("Please complete all fields");
+                return [4 /*yield*/, bcrypt.hash(password, saltRounds)];
+            case 1:
+                hash = _b.sent();
+                user = new userModel_1.UserModelDB({ email: email, password: hash });
+                return [4 /*yield*/, user.save()];
+            case 2:
+                userDB = _b.sent();
+                console.log(userDB);
+                res.send({ ok: true, userDB: userDB });
+                return [3 /*break*/, 4];
+            case 3:
+                error_2 = _b.sent();
+                console.error(error_2);
+                res.send({ error: error_2.message });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
-        catch (error) {
-            console.error(error);
-            res.status(401).send({ error: error.message });
-        }
-        return [2 /*return*/];
     });
 }); };
-//this code is sending an email with a confirmation code to register the app:
-function sendMail(email) {
-    debugger;
-    //this function generates a random code:
-    function generateRandomCode() {
-        var min = 100000; // Minimum 6-digit number (inclusive)
-        var max = 999999; // Maximum 6-digit number (inclusive)
-        var confirmationNUM = Math.floor(Math.random() * (max - min + 1)) + min;
-        var confirmation = confirmationNUM.toString();
-        var cookie = {
-            confirmation: confirmation
-        };
-        var token = jwt.encode(cookie, secret);
-        return confirmation;
-    }
-    // Generate a random confirmation code in the length of 6 digits:
-    var confirmationCode = generateRandomCode();
-    //send an email with the confirmation code:
-    var transporter = nodemailer.createTransport({
-        host: "smtp.forwardemail.net",
-        port: 465,
-        secure: true,
-        auth: {
-            // TODO: replace `user` and `pass` values from <https://forwardemail.net>
-            user: "teamprojectmusic3@gmail.com",
-            pass: "MusicMaster3"
-        }
-    });
-    // async..await is not allowed in global scope, must use a wrapper
-    function main() {
-        return __awaiter(this, void 0, void 0, function () {
-            var info;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, transporter.sendMail({
-                            from: '"MusicMaster" <teamprojectmusic3@gmail.com>',
-                            to: "" + email,
-                            subject: "your confirmation code",
-                            text: "this is your confirmation code:" + confirmationCode + " , please insert it in the app",
-                            html: "<b>" + confirmationCode + "</b>"
-                        })];
-                    case 1:
-                        info = _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        });
-    }
-    return confirmationCode;
-}
