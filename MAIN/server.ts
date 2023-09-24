@@ -17,6 +17,8 @@ app.use(express.static("Public"));
 
 //body
 app.use(express.json());
+
+
 const {MONGO_URI} = process.env;
 //connect to mongoDB with mongoose
 mongoose.connect(MONGO_URI).then(()=>{

@@ -1,6 +1,3 @@
-"use strict";
-// terminal:
-// npm install nodemailer crypto
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -37,30 +34,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
-//The crypto package in Node.js is a built-in module that provides Random Number Generation
-var crypto_1 = require("crypto");
-//The nodemailer package is a popular Node.js library that allows you to send email from your Node.js applications.
-var nodemailer_1 = require("nodemailer");
 function handleRegister(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var name, email, password, user;
+        var name, email, password, user, response, confirmationCode, error_1;
         return __generator(this, function (_a) {
-            try {
-                debugger;
-                ev.preventDefault();
-                name = ev.target.email.value;
-                email = ev.target.email.value;
-                password = ev.target.password.value;
-                user = { name: name, email: email, password: password };
-                sendMail(email);
-                openConfirmationTab();
-                registerConfirmed(user);
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    debugger;
+                    ev.preventDefault();
+                    name = ev.target.name.value;
+                    email = ev.target.email.value;
+                    password = ev.target.password.value;
+                    user = { name: name, email: email, password: password };
+                    return [4 /*yield*/, fetch("API/users/send-email", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(user)
+                        })];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    confirmationCode = _a.sent();
+                    console.log(confirmationCode);
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _a.sent();
+                    console.error(error_1);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
             }
-            catch (error) {
-                console.error(error);
-            }
-            return [2 /*return*/];
         });
     });
 }
@@ -91,42 +97,4 @@ function registerConfirmed(user) {
             }
         });
     });
-}
-//this code is sending an email with a confirmation code to register the app:
-function sendMail(email) {
-    //this function generates a random code:
-    function generateRandomCode(length) {
-        var bytes = crypto_1["default"].randomBytes(Math.ceil(length / 2));
-        var confirmation = bytes.toString('hex').slice(0, length);
-        localStorage.setItem("confirmCode", confirmation);
-        return confirmation;
-    }
-    // This line creates a transporter object that will be used to send email messages. The createTransport function is part of the nodemailer package
-    var transporter = nodemailer_1["default"].createTransport({
-        service: 'Gmail',
-        auth: {
-            user: 'teamprojectmusic3@gmail.com',
-            pass: 'MusicMaster3'
-        }
-    });
-    // Generate a random confirmation code in the length of 6 digits:
-    var confirmationCode = generateRandomCode(6);
-    // Send an email with the confirmation code
-    var mailOptions = {
-        from: 'teamprojectmusic3@gmail.com',
-        to: "users email: " + email,
-        subject: 'Confirmation Code for App Registration',
-        text: "Your confirmation code is: " + confirmationCode
-    };
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.error('Error sending email:', error);
-        }
-        else {
-            console.log('Email sent:', info.response);
-        }
-    });
-}
-//this function opens the confirmation tab:
-function openConfirmationTab() {
 }
