@@ -3,12 +3,15 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import { GridFsStorage } from 'multer-gridfs-storage';
 
+
 //streaming library for node.js
 const path = require("path");
 const crypto = require("crypto");
 const multer = require("multer");
 const Grid = require("gridfs-stream");
 const bodyParser = require("body-parser");
+const methodOverride = require('method-override')
+
 
 
 //npm i dotenv
@@ -31,26 +34,34 @@ app.use(express.static("Public"));
 app.use(express.json());
 
 
-const {MONGO_URI} = process.env;
+const { MONGO_URI } = process.env;
 //connect to mongoDB with mongoose
-mongoose.connect(MONGO_URI).then(()=>{
+mongoose.connect(MONGO_URI).then(() => {
   console.info("MongoDB connected")
 })
 
-.catch(err=>{
-  console.error(err)
-})
+  .catch(err => {
+    console.error(err)
+  })
 
 //setting the songs DB:
-const {SONGS_MONGO_URI} = process.env;
+
+const { SONGS_MONGO_URI } = process.env;
 const conn = mongoose.createConnection(SONGS_MONGO_URI);
+
 let gfs;
 conn.once('open', () => {
   //init stream
   gfs = Grid(conn.db, mongoose.mongo);
   gfs.collection('uploads');
 });
-
+//check if DB connected
+conn.on('connected', () => {
+  console.log("songs file system (gridFS) connected successfully");
+});
+conn.on('error', (error) => {
+  console.error('MongoDB Connection Error:', error);
+});
 //create storage engine
 const storage = new GridFsStorage({
   url: SONGS_MONGO_URI,
@@ -65,6 +76,7 @@ const storage = new GridFsStorage({
           filename: filename,
           bucketName: "uploads",
         };
+        console.log("new file created")
         resolve(fileInfo);
       });
     });
@@ -72,7 +84,38 @@ const storage = new GridFsStorage({
 });
 const upload = multer({ storage });
 
+
 app.post("/upload", upload.single("file"), (req: any, res: any) => {
+  if (!req.file) {
+    return res.status(400).send("No file uploaded.");
+  }
+  const metadata = {
+    artist: req.body.artist, // Example: Get the artist name from the request body
+    songName: req.body.songName, // Example: Get the song name from the request body
+  };
+  console.log(metadata)
+  const fileInfo = {
+    filename: req.file.filename,
+    bucketName: "uploads",
+    metadata: metadata, // Add the custom metadata here
+  };
+
+   // Create a writable stream for the file
+   const writestream = gfs.createWriteStream({
+    filename: req.file.filename,
+    metadata: metadata, // Add custom metadata here
+  });
+
+  // Pipe the file buffer to the writable stream
+  writestream.write(req.file.buffer);
+  writestream.end();
+  
+  gfs.writeFile(fileInfo, req.file.buffer, (error) => {
+    if (error) {
+      return res.status(500).send("Error uploading file.");
+    }})
+
+  
   res.redirect("/")
 });
 
@@ -100,11 +143,7 @@ app.get("/play/:filename", (req, res) => {
   });
 });
 
-//to get the audio:
-// <audio controls>
-//   <source src="/play/your_mp3_filename.mp3" type="audio/mpeg">
-//   Your browser does not support the audio element.
-// </audio>
+
 
 
 

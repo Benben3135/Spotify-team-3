@@ -13,6 +13,7 @@ const crypto = require("crypto");
 const multer = require("multer");
 const Grid = require("gridfs-stream");
 const bodyParser = require("body-parser");
+const methodOverride = require('method-override');
 //npm i dotenv
 require("dotenv/config");
 const app = express_1.default();
@@ -41,6 +42,13 @@ conn.once('open', () => {
     gfs = Grid(conn.db, mongoose_1.default.mongo);
     gfs.collection('uploads');
 });
+//check if DB connected
+conn.on('connected', () => {
+    console.log("songs file system (gridFS) connected successfully");
+});
+conn.on('error', (error) => {
+    console.error('MongoDB Connection Error:', error);
+});
 //create storage engine
 const storage = new multer_gridfs_storage_1.GridFsStorage({
     url: SONGS_MONGO_URI,
@@ -55,6 +63,7 @@ const storage = new multer_gridfs_storage_1.GridFsStorage({
                     filename: filename,
                     bucketName: "uploads",
                 };
+                console.log("new file created");
                 resolve(fileInfo);
             });
         });
@@ -62,6 +71,32 @@ const storage = new multer_gridfs_storage_1.GridFsStorage({
 });
 const upload = multer({ storage });
 app.post("/upload", upload.single("file"), (req, res) => {
+    if (!req.file) {
+        return res.status(400).send("No file uploaded.");
+    }
+    const metadata = {
+        artist: req.body.artist,
+        songName: req.body.songName,
+    };
+    console.log(metadata);
+    const fileInfo = {
+        filename: req.file.filename,
+        bucketName: "uploads",
+        metadata: metadata,
+    };
+    // Create a writable stream for the file
+    const writestream = gfs.createWriteStream({
+        filename: req.file.filename,
+        metadata: metadata,
+    });
+    // Pipe the file buffer to the writable stream
+    writestream.write(req.file.buffer);
+    writestream.end();
+    gfs.writeFile(fileInfo, req.file.buffer, (error) => {
+        if (error) {
+            return res.status(500).send("Error uploading file.");
+        }
+    });
     res.redirect("/");
 });
 app.get("/play/:filename", (req, res) => {
@@ -83,11 +118,6 @@ app.get("/play/:filename", (req, res) => {
         readstream.pipe(res);
     });
 });
-//to get the audio:
-// <audio controls>
-//   <source src="/play/your_mp3_filename.mp3" type="audio/mpeg">
-//   Your browser does not support the audio element.
-// </audio>
 const userRouter_1 = __importDefault(require("./API/users/userRouter"));
 app.use("/API/users", userRouter_1.default);
 app.listen(port, () => {
