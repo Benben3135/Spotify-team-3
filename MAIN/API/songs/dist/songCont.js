@@ -47,7 +47,7 @@ var path = require('path');
 var GridFsStorage = require('multer-gridfs-storage').GridFsStorage;
 // const config = require('./config'); // Contains env. and other configs
 // connect to mongoDB with mongoose
-var SONGS_MONGO_URI = process.env.SONGS_MONGO_URI;
+var MONGO_URI = process.env.MONGO_URI;
 // mongoose.connect(SONGS_MONGO_URI).then(()=>{
 //     console.info("MongoSongDB connected")
 //   })
@@ -57,7 +57,7 @@ var SONGS_MONGO_URI = process.env.SONGS_MONGO_URI;
 //upload a file
 // const {SONGS_MONGO_URI} = process.env;
 var storage = new GridFsStorage({
-    url: SONGS_MONGO_URI,
+    url: MONGO_URI,
     file: function (req, file) {
         return new Promise(function (resolve, reject) {
             crypto.randomBytes(16, function (err, buf) {
@@ -126,7 +126,7 @@ exports.uploadSong = (upload.single("file"), function (req, res, next) { return 
 //   .catch((err) => res.status(500).json(err));
 // });
 // const url = SONGS_MONGO_URI;
-var connect = mongoose_1["default"].createConnection(SONGS_MONGO_URI);
+var connect = mongoose_1["default"].createConnection(MONGO_URI);
 var gridFS;
 connect.once('open', function () {
     // initialize stream

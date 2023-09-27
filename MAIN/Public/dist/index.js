@@ -47,7 +47,7 @@ function handleSignIn(ev) {
                     return [4 /*yield*/, fetch("API/users/login", {
                             method: "POST",
                             headers: {
-                                "content-type": "application/json"
+                                "Content-Type": "application/json"
                             },
                             body: JSON.stringify({ email: email, password: password })
                         })];

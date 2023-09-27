@@ -4,7 +4,7 @@ const router = express.Router()
 
 
 router
-.patch('/upload-file', uploadSong)
+.post('/upload-file', uploadSong)
 
 
 

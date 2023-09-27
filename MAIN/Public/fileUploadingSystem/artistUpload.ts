@@ -16,7 +16,7 @@ async function handleUploadSong(ev:any) {
 
         const song:Song = {filename, file};
         const response = await fetch("API/songs/upload-file", {
-            method: 'PATCH',
+            method: 'POST',
             headers: {'Content-Type': 'mulpipart/form-data'},
             body: JSON.stringify(song)
         })

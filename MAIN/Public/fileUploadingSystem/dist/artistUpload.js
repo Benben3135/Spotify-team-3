@@ -48,7 +48,7 @@ function handleUploadSong(ev) {
                         throw new Error("Please fill all fileds");
                     song = { filename: filename, file: file };
                     return [4 /*yield*/, fetch("API/songs/upload-file", {
-                            method: 'PATCH',
+                            method: 'POST',
                             headers: { 'Content-Type': 'mulpipart/form-data' },
                             body: JSON.stringify(song)
                         })];

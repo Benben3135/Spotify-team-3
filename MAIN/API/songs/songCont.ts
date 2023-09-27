@@ -10,7 +10,7 @@ const {GridFsStorage} = require('multer-gridfs-storage');
 // const config = require('./config'); // Contains env. and other configs
 
 // connect to mongoDB with mongoose
-const {SONGS_MONGO_URI} = process.env;
+const {MONGO_URI} = process.env;
 // mongoose.connect(SONGS_MONGO_URI).then(()=>{
 //     console.info("MongoSongDB connected")
 //   })
@@ -21,7 +21,7 @@ const {SONGS_MONGO_URI} = process.env;
     //upload a file
     // const {SONGS_MONGO_URI} = process.env;
 const storage = new GridFsStorage({
-    url: SONGS_MONGO_URI,
+    url: MONGO_URI,
     file: (req:any, file:any) => {
         return new Promise((resolve, reject) => {
             crypto.randomBytes(16, (err, buf) => {
@@ -89,7 +89,7 @@ export const uploadSong = (upload.single("file"), async(req:any, res:any, next:a
 // });
 
 // const url = SONGS_MONGO_URI;
-    const connect = mongoose.createConnection(SONGS_MONGO_URI);
+    const connect = mongoose.createConnection(MONGO_URI);
 
     let gridFS;
 

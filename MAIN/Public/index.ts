@@ -6,7 +6,7 @@ async function handleSignIn(ev:any){
         const response = await fetch("API/users/login", {
             method: "POST",
             headers: {
-                "content-type": "application/json",
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({email,password}),
         });
