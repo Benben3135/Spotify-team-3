@@ -1,17 +1,13 @@
 import {Schema, model} from "mongoose";
 
 export const SongSchema = new Schema({
-    caption: {
-        required: true,
-        type: String,
-    },
     filename: {
         required: true,
         type: String,
     },
-    fileId: {
+    file: {
         required: true,
-        type: String,
+        type: Buffer
     },
     createAt: {
         default: Date.now(),

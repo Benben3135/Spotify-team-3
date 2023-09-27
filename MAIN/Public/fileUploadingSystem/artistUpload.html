@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="../Main/dist/main.js" defer></script>
+    <script src="./dist/artistUpload.js" defer></script>
+    <link rel="stylesheet" href="./dist/system.css">
+    <!-- this link to font-awesome icons kit -->
+    <script src="https://kit.fontawesome.com/761340618e.js" crossorigin="anonymous"></script>
+    <!-- titleRoot class is to change the title of the page to match the username -->
+    <title id="title"></title>
+</head>
+
+<body>
+    <!-- <img class="back_img" src="../Files_To_Use/pexels-cottonbro-studio-3693108.jpg" alt=""> -->
+    <!-- <img class="small_back_img" src="../Files_To_Use/pexels-cottonbro-studio-3693108.jpg" alt=""> -->
+    <div class="wrapper">
+        <!-- <img id="logo_img" src="../Files_To_Use/melodica__1_-removebg-preview.png" alt=""> -->
+        <h1 id="logo">SoundMaster</h1>
+        <form onsubmit="handleUploadSong(event)">
+            <input type="text" name="filename" id="name" placeholder="Song Name">
+            <input style="color: aliceblue; margin: 0;" type="file" name="file" id="file">
+            <button id="submit" type="submit">Submit</button>
+        </form>
+    </div>
+
+
+
+
+    
+</body>
+
+</html>

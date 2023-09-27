@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const mongoose_1 = __importDefault(require("mongoose"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 //npm i dotenv
 require("dotenv/config");
@@ -16,12 +15,12 @@ const methodOverride = require('method-override');
 const multer = require('multer');
 const bodyParser = require("body-parser");
 const path = require('path');
-const GridFsStorage = require('multer-gridfs-storage');
-const config = require('./config'); // Contains env. and other configs
+const { GridFsStorage } = require('multer-gridfs-storage');
 //middlware for using parser
 app.use(cookie_parser_1.default());
+// const {SONGS_MONGO_URI} = process.env;
 // const storage = new GridFsStorage({
-//   url: config.mongoURI,
+//   url: SONGS_MONGO_URI,
 //   file: (req, file) => {
 //       return new Promise((resolve, reject) => {
 //           crypto.randomBytes(16, (err, buf) => {
@@ -43,16 +42,16 @@ app.use(cookie_parser_1.default());
 app.use(express_1.default.static("Public"));
 //body
 app.use(express_1.default.json());
-const { MONGO_URI } = process.env;
-//connect to mongoDB with mongoose
-mongoose_1.default.connect(MONGO_URI).then(() => {
-    console.info("MongoDB connected");
-})
-    .catch(err => {
-    console.error(err);
-});
-// const url = config.mongoURI;
-//     const connect = mongoose.createConnection(url, {});
+// const {MONGO_URI} = process.env;
+// //connect to mongoDB with mongoose
+// mongoose.connect(MONGO_URI).then(()=>{
+//   console.info("MongoDB connected")
+// })
+// .catch(err=>{
+//   console.error(err)
+// })
+// // const url = config.mongoURI;
+//     const connect = mongoose.createConnection(SONGS_MONGO_URI);
 //     let gridFS;
 //     connect.once('open', () => {
 //         // initialize stream
@@ -60,10 +59,10 @@ mongoose_1.default.connect(MONGO_URI).then(() => {
 //             bucketName: "songUploads"
 //         });
 //     }); 
-const userRouter_1 = __importDefault(require("./API/users/userRouter"));
-app.use("/API/users", userRouter_1.default);
 const songRouter_1 = __importDefault(require("./API/songs/songRouter"));
 app.use("/API/songs", songRouter_1.default);
+const userRouter_1 = __importDefault(require("./API/users/userRouter"));
+app.use("/API/users", userRouter_1.default);
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
 });

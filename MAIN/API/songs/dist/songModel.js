@@ -3,17 +3,13 @@ exports.__esModule = true;
 exports.Song = exports.SongSchema = void 0;
 var mongoose_1 = require("mongoose");
 exports.SongSchema = new mongoose_1.Schema({
-    caption: {
-        required: true,
-        type: String
-    },
     filename: {
         required: true,
         type: String
     },
-    fileId: {
+    file: {
         required: true,
-        type: String
+        type: Buffer
     },
     createAt: {
         "default": Date.now(),

@@ -4,5 +4,7 @@ var express_1 = require("express");
 var songCont_1 = require("./songCont");
 var router = express_1["default"].Router();
 router
-    .patch('/upload-file', songCont_1.uploadSong)["delete"]('/delete-file/:id', songCont_1.deleteSong);
+    .patch('/upload-file', songCont_1.uploadSong);
 exports["default"] = router;
+// import { uploadSong,deleteSong } from './songCont'
+// .delete('/delete-file/:id',deleteSong)
