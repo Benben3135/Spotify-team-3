@@ -3,7 +3,7 @@ import {userSongs} from "./userSongsModel"
 
 // get user-songs (all the songs in his list)
 
-export async function getUserSongs(req: any, res: any){ //this fun' need to load when main page of the user load (after lodgin)
+export async function getUserSongsList(req: any, res: any){ //this fun' need to load when main page of the user load (after lodgin)
     try {
         //get user id from cookie
         const userId = req.cookies.user.uid; //speshel identefayer
@@ -24,10 +24,3 @@ export async function getUserSongs(req: any, res: any){ //this fun' need to load
     }
 }
 
-
-
-// get creator-songs (only the songs that he created)
-
-
-// add song to user list
-//delete song from user list

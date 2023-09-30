@@ -36,10 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.getUserSongs = void 0;
+exports.getUserSongsList = void 0;
 var userModel_1 = require("../users/userModel");
 // get user-songs (all the songs in his list)
-function getUserSongs(req, res) {
+function getUserSongsList(req, res) {
     return __awaiter(this, void 0, void 0, function () {
         var userId, userSongsDB, error_1;
         return __generator(this, function (_a) {
@@ -67,7 +67,4 @@ function getUserSongs(req, res) {
         });
     });
 }
-exports.getUserSongs = getUserSongs;
-// get creator-songs (only the songs that he created)
-// add song to user list
-//delete song from user list
+exports.getUserSongsList = getUserSongsList;
