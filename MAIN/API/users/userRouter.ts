@@ -1,13 +1,15 @@
 import express from 'express'
-import { login , register } from './userCont';
+import { login , register, getUser } from './userCont';
 import { isAdmin } from './userMiddlewear';
-const router = express.Router();
+const userRouter = express.Router();
 
 
-router.post("/login" ,login)
+userRouter.post("/login" ,isAdmin, login)
 .post("/register", register)
+.get("/get-User" , getUser)
 ;
    
 
+export default userRouter;
 
-export default router;
+
