@@ -24,3 +24,11 @@ export async function getUserSongsList(req: any, res: any){ //this fun' need to 
     }
 }
 
+export async function addUserSongToList(req:any, res:any){
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
