@@ -1,8 +1,8 @@
 "use strict";
 exports.__esModule = true;
-exports.Song = exports.SongSchema = void 0;
+exports.SongModel = void 0;
 var mongoose_1 = require("mongoose");
-exports.SongSchema = new mongoose_1.Schema({
+var SongSchema = new mongoose_1.Schema({
     filename: {
         required: true,
         type: String
@@ -11,9 +11,11 @@ exports.SongSchema = new mongoose_1.Schema({
         required: true,
         type: Buffer
     },
+    title: String,
+    genre: String,
     createAt: {
         "default": Date.now(),
         type: Date
     }
 });
-exports.Song = mongoose_1.model('Song', exports.SongSchema);
+exports.SongModel = mongoose_1.model('Song', SongSchema);

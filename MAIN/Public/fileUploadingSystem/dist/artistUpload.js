@@ -34,9 +34,81 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+// async function getSongs(){
+//     try {
+//         const response = await fetch('/API/songs/get-song')
+//         const result = await response.json();
+//         const { songs } = result;
+//         if(!Array.isArray(songs)) throw new Error("songs are not array")
+//         console.log(songs)
+//         console.log(result)
+//         return songs;
+//     } catch (error) {
+//         console.error(error);
+//         return []
+//     }
+// }
+function handleUploadSong(ev) {
+    return __awaiter(this, void 0, void 0, function () {
+        var formData, response, result, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 4, , 5]);
+                    ev.preventDefault();
+                    formData = new FormData();
+                    formData.append('filename', ev.target.filename.value);
+                    formData.append('file', ev.target.file.files[0]);
+                    formData.append('title', ev.target.title.value);
+                    formData.append('genre', ev.target.genre.value);
+                    return [4 /*yield*/, fetch("/API/songs/upload-file", {
+                            method: 'POST',
+                            body: formData
+                        })];
+                case 1:
+                    response = _a.sent();
+                    if (!response.ok) return [3 /*break*/, 3];
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    result = _a.sent();
+                    console.log(result);
+                    _a.label = 3;
+                case 3: return [3 /*break*/, 5];
+                case 4:
+                    error_1 = _a.sent();
+                    console.error(error_1.message);
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
+// async function handleUploadSong(ev:any) {
+//     try {
+//         ev.preventDefault();
+//         // console.log(`wefwef`)
+//         const filename = ev.target.filename.value
+//         const file = ev.target.file.value
+//         const title = ev.target.title.value
+//         const genre = ev.target.genre.value
+//         if(!filename || !file || !title || !genre) throw new Error("Please fill all fileds")
+//         const song:Song = {filename, file, title, genre};
+//         const response = await fetch("/API/songs/upload-file", {
+//             method: 'POST',
+//             headers: {'Content-Type': 'application/json'},
+//             body: JSON.stringify(song)
+//         })
+//         if(response.ok){
+//             const result = await response.json();
+//             console.log(result);
+//         }
+//     } catch (error) {
+//         console.error(error.message)
+//     }
+// }
 function getSongs() {
     return __awaiter(this, void 0, void 0, function () {
-        var response, result, songs, error_1;
+        var response, result, songs, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -54,44 +126,49 @@ function getSongs() {
                     console.log(result);
                     return [2 /*return*/, songs];
                 case 3:
-                    error_1 = _a.sent();
-                    console.error(error_1);
+                    error_2 = _a.sent();
+                    console.error(error_2);
                     return [2 /*return*/, []];
                 case 4: return [2 /*return*/];
             }
         });
     });
 }
-function handleUploadSong(ev) {
+function renderSongHtml(song) {
+    try {
+        var html = "<div class=\"song-container\">\n        <h2>filename: " + song.filename + "</h2>\n        <p>file: " + song.file + "</p>\n        <p>title: " + song.title + "</p>\n        <p>genre: " + song.genre + "</p>\n        </div>\n        ";
+        return html;
+    }
+    catch (error) {
+        console.error(error);
+        return "";
+    }
+}
+function renderSongs(songs, HTMLElement) {
+    try {
+        if (!HTMLElement)
+            throw new Error("HTMLElement not found");
+        console.log(songs);
+        if (!Array.isArray(songs))
+            throw new Error("songs are not array");
+        var songsHTML = songs.map(function (song) { return renderSongHtml(song); }).join("");
+        HTMLElement.innerHTML = songsHTML;
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+function handleGetSong() {
     return __awaiter(this, void 0, void 0, function () {
-        var filename, file, song, response, result, error_2;
+        var songs, rootSong;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 3, , 4]);
-                    ev.preventDefault();
-                    filename = ev.target.filename.value;
-                    file = ev.target.file.value;
-                    if (!filename || !file)
-                        throw new Error("Please fill all fileds");
-                    song = { filename: filename, file: file };
-                    return [4 /*yield*/, fetch("API/songs/upload-file", {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'mulpipart/form-data' },
-                            body: JSON.stringify(song)
-                        })];
+                case 0: return [4 /*yield*/, getSongs()];
                 case 1:
-                    response = _a.sent();
-                    return [4 /*yield*/, response.json()];
-                case 2:
-                    result = _a.sent();
-                    console.log(result);
-                    return [3 /*break*/, 4];
-                case 3:
-                    error_2 = _a.sent();
-                    console.error(error_2);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    songs = _a.sent();
+                    rootSong = document.querySelector("#rootSong");
+                    renderSongs(songs, rootSong);
+                    return [2 /*return*/];
             }
         });
     });

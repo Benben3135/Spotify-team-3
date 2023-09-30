@@ -36,16 +36,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.uploadSong = exports.getSong = exports.GridFsStorage = void 0;
+exports.uploadSong = exports.storage = void 0;
 var songModel_1 = require("./songModel");
 var mongoose_1 = require("mongoose");
-var multer = require('multer');
-var methodOverride = require('method-override');
-var crypto = require('crypto');
-var path = require('path');
+var multer_1 = require("multer");
+var method_override_1 = require("method-override");
+var crypto_1 = require("crypto");
+var path_1 = require("path");
 var express_1 = require("express");
 var app = express_1["default"]();
-exports.GridFsStorage = require('multer-gridfs-storage').GridFsStorage;
+var multer_gridfs_storage_1 = require("multer-gridfs-storage");
 var MONGO_URI = process.env.MONGO_URI;
 var connect = mongoose_1["default"].createConnection(MONGO_URI);
 var gridFS;
@@ -57,25 +57,30 @@ connect.once('open', function () {
 });
 // const config = require('./config'); // Contains env. and other configs
 // connect to mongoDB with mongoose
-app.use(methodOverride('_method'));
+app.use(method_override_1["default"]('_method'));
 mongoose_1["default"].connect(MONGO_URI).then(function () {
     console.info("MongoSongDB connected");
 })["catch"](function (err) {
     console.error(err);
 });
 //upload a file
-var storage = new exports.GridFsStorage({
+exports.storage = new multer_gridfs_storage_1.GridFsStorage({
     url: MONGO_URI,
     file: function (req, file) {
         return new Promise(function (resolve, reject) {
-            crypto.randomBytes(16, function (err, buf) {
+            crypto_1["default"].randomBytes(16, function (err, buf) {
                 if (err) {
                     return reject(err);
                 }
-                var filename = buf.toString('hex') + path.extname(file.originalname);
+                var filename = buf.toString('hex') + path_1["default"].extname(file.originalname);
                 var fileInfo = {
                     filename: filename,
-                    bucketName: 'songUploads'
+                    bucketName: 'songUploads',
+                    metadata: {
+                        // Add metadata based on your schema
+                        title: req.body.title,
+                        genre: req.body.genre
+                    }
                 };
                 console.log("new file created");
                 resolve(fileInfo);
@@ -83,52 +88,94 @@ var storage = new exports.GridFsStorage({
         });
     }
 });
-var upload = multer({ storage: storage });
-exports.getSong = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var songDB, error_1;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, exports.GridFsStorage.find({})];
-            case 1:
-                songDB = _a.sent();
-                res.send({ songs: songDB });
-                return [3 /*break*/, 3];
-            case 2:
-                error_1 = _a.sent();
-                console.error(error_1);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); };
-exports.uploadSong = (upload.single("file"), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, filename, file, song, songDB;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                console.log(req.file); //after it will return the value of file
-                console.log(req.body);
-                _a = req.body, filename = _a.filename, file = _a.file;
-                console.log({ filename: filename, file: file });
-                if (!filename || !file)
-                    throw new Error("please fill all fileds");
-                song = new songModel_1.Song({ filename: filename, file: file });
-                console.log(song);
-                return [4 /*yield*/, song.save()
-                        .then(function (songDB) {
-                        res.status(200).json({
-                            message: 'File uploaded successfuly.',
-                            songDB: songDB
-                        });
-                    })["catch"](function (err) { return res.status(500).json(err); })];
-            case 1:
-                songDB = _b.sent();
-                return [2 /*return*/];
-        }
-    });
-}); });
+var upload = multer_1["default"]({ storage: exports.storage });
+function uploadSong() {
+    var _this = this;
+    upload.single('file'), function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+        var _a, filename, file, metadata, song, songDB, err_1;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    console.log(req.file);
+                    console.log(req.body);
+                    _a = req.file, filename = _a.filename, file = _a.file, metadata = _a.metadata;
+                    console.log({ filename: filename, metadata: metadata });
+                    if (!filename || !file)
+                        throw new Error('please fill all fields');
+                    song = new songModel_1.SongModel({
+                        filename: filename,
+                        file: file,
+                        title: metadata.title,
+                        genre: metadata.genre
+                    });
+                    console.log(song);
+                    _b.label = 1;
+                case 1:
+                    _b.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, song.save()];
+                case 2:
+                    songDB = _b.sent();
+                    res.status(200).json({
+                        message: 'File uploaded successfully.',
+                        songDB: songDB
+                    });
+                    return [3 /*break*/, 4];
+                case 3:
+                    err_1 = _b.sent();
+                    res.status(500).json(err_1);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    }); };
+}
+exports.uploadSong = uploadSong;
+//   export const getSong = async(req:any, res:any)=>{
+//     try {
+//         const songDB = await SongModel.find({});
+//         res.send({songs:songDB})
+//     } catch (error) {
+//         console.error(error)
+//     }
+// }
+// const song = new SongModel({
+//     filename: __filename,
+//     file: File,
+//     title: metadata.title,
+//     genre: metadata.genre,
+// });
+// console.log(song);
+// try {
+//     const songDB = await song.save();
+//     res.status(200).json({
+//         message: 'File uploaded successfully.',
+//         songDB,
+//     });
+// } catch (err) {
+//     res.status(500).json(err);
+// }
+// });
+// export const uploadSong = (upload.single("file"), async(req:any, res:any, next:any) => {
+//   console.log(req.file) //after it will return the value of file
+//   console.log(req.body)
+//   const {  filename,file, metadata } = req.body;
+//   console.log({ filename,file, metadata });
+//   if(!filename || !file) throw new Error("please fill all fileds")
+//   const song = new Song({
+//      filename:filename,
+//      file:file,title: metadata.title,
+//      genre: metadata.genre,
+//     })
+//     console.log(song)
+//   const songDB = await song.save()
+//       .then((songDB) => {
+//         res.status(200).json({
+//           message: 'File uploaded successfuly.',
+//           songDB,
+//         });
+//       })
+//       .catch((err) => res.status(500).json(err));
+//   })
 // export const uploadSong = (upload.single("file"), (req, res, next) => {
 //   console.log(req.file) //after it will return the value of file
 //   console.log(req.body)

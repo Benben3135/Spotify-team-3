@@ -1,11 +1,13 @@
 import express from 'express'
-import { uploadSong,getSong } from './songCont'
+import { uploadSong} from './songCont'
+import fs from 'fs'
 const router = express.Router()
 
 
 router
-.get('/get-file',getSong )
+// .get('/get-song',getSong )
 .post('/upload-file', uploadSong)
+// .post('/upload-file', uploadSong)
 
 
 
