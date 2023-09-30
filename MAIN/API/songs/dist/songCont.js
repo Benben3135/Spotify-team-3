@@ -36,27 +36,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.uploadSong = void 0;
+exports.uploadSong = exports.getSong = exports.GridFsStorage = void 0;
 var songModel_1 = require("./songModel");
 var mongoose_1 = require("mongoose");
 var multer = require('multer');
 var methodOverride = require('method-override');
 var crypto = require('crypto');
 var path = require('path');
-// const GridFsStorage = require('multer-gridfs-storage');
-var GridFsStorage = require('multer-gridfs-storage').GridFsStorage;
+var express_1 = require("express");
+var app = express_1["default"]();
+exports.GridFsStorage = require('multer-gridfs-storage').GridFsStorage;
+var MONGO_URI = process.env.MONGO_URI;
+var connect = mongoose_1["default"].createConnection(MONGO_URI);
+var gridFS;
+connect.once('open', function () {
+    // initialize stream
+    gridFS = new mongoose_1["default"].mongo.GridFSBucket(connect.db, {
+        bucketName: "songUploads"
+    });
+});
 // const config = require('./config'); // Contains env. and other configs
 // connect to mongoDB with mongoose
-var MONGO_URI = process.env.MONGO_URI;
-// mongoose.connect(SONGS_MONGO_URI).then(()=>{
-//     console.info("MongoSongDB connected")
-//   })
-//   .catch(err=>{
-//       console.error(err)
-//     }) 
+app.use(methodOverride('_method'));
+mongoose_1["default"].connect(MONGO_URI).then(function () {
+    console.info("MongoSongDB connected");
+})["catch"](function (err) {
+    console.error(err);
+});
 //upload a file
-// const {SONGS_MONGO_URI} = process.env;
-var storage = new GridFsStorage({
+var storage = new exports.GridFsStorage({
     url: MONGO_URI,
     file: function (req, file) {
         return new Promise(function (resolve, reject) {
@@ -76,7 +84,25 @@ var storage = new GridFsStorage({
     }
 });
 var upload = multer({ storage: storage });
-// const upload = multer({ dest: "uploads/" });
+exports.getSong = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var songDB, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, exports.GridFsStorage.find({})];
+            case 1:
+                songDB = _a.sent();
+                res.send({ songs: songDB });
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                console.error(error_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 exports.uploadSong = (upload.single("file"), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, filename, file, song, songDB;
     return __generator(this, function (_b) {
@@ -126,14 +152,6 @@ exports.uploadSong = (upload.single("file"), function (req, res, next) { return 
 //   .catch((err) => res.status(500).json(err));
 // });
 // const url = SONGS_MONGO_URI;
-var connect = mongoose_1["default"].createConnection(MONGO_URI);
-var gridFS;
-connect.once('open', function () {
-    // initialize stream
-    gridFS = new mongoose_1["default"].mongo.GridFSBucket(connect.db, {
-        bucketName: "songUploads"
-    });
-});
 //Delete a particular file using its ObjectId
 // export const deleteSong =((req, res, next) => {
 //     gridFS.delete(new mongoose.Types.ObjectId(req.params.id), (err, data) => {

@@ -34,9 +34,37 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+function getSongs() {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, result, songs, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, fetch('/API/songs/get-song')];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    result = _a.sent();
+                    songs = result.songs;
+                    if (!Array.isArray(songs))
+                        throw new Error("songs are not array");
+                    console.log(songs);
+                    console.log(result);
+                    return [2 /*return*/, songs];
+                case 3:
+                    error_1 = _a.sent();
+                    console.error(error_1);
+                    return [2 /*return*/, []];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
 function handleUploadSong(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var filename, file, song, response, result, error_1;
+        var filename, file, song, response, result, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -60,8 +88,8 @@ function handleUploadSong(ev) {
                     console.log(result);
                     return [3 /*break*/, 4];
                 case 3:
-                    error_1 = _a.sent();
-                    console.error(error_1);
+                    error_2 = _a.sent();
+                    console.error(error_2);
                     return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }

@@ -4,7 +4,21 @@ interface Song {
     _id?: string;
 }
 
+async function getSongs(){
+    try {
+        const response = await fetch('/API/songs/get-song')
+        const result = await response.json();
+        const { songs } = result;
+        if(!Array.isArray(songs)) throw new Error("songs are not array")
+        console.log(songs)
+        console.log(result)
+        return songs;
 
+    } catch (error) {
+        console.error(error);
+        return []
+    }
+}
 
 async function handleUploadSong(ev:any) {
     try {

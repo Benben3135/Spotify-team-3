@@ -4,23 +4,36 @@ const multer = require('multer');
 const methodOverride = require('method-override');
 const crypto = require('crypto');
 const path = require('path');
-// const GridFsStorage = require('multer-gridfs-storage');
-const {GridFsStorage} = require('multer-gridfs-storage');
+import express from "express";
+const app = express();
+export const {GridFsStorage} = require('multer-gridfs-storage');
 
+const {MONGO_URI} = process.env;
+const connect = mongoose.createConnection(MONGO_URI);
+
+let gridFS;
+
+connect.once('open', () => {
+    // initialize stream
+    gridFS = new mongoose.mongo.GridFSBucket(connect.db, {
+        bucketName: "songUploads"
+    });
+}); 
 // const config = require('./config'); // Contains env. and other configs
 
 // connect to mongoDB with mongoose
-const {MONGO_URI} = process.env;
-// mongoose.connect(SONGS_MONGO_URI).then(()=>{
-//     console.info("MongoSongDB connected")
-//   })
-  
-//   .catch(err=>{
-//       console.error(err)
-//     }) 
+app.use(methodOverride('_method'));
+mongoose.connect(MONGO_URI).then(()=>{
+    console.info("MongoSongDB connected")
+  })
+  .catch(err=>{
+      console.error(err)
+    }) 
+
+    
+
     //upload a file
-    // const {SONGS_MONGO_URI} = process.env;
-const storage = new GridFsStorage({
+ const storage = new GridFsStorage({
     url: MONGO_URI,
     file: (req:any, file:any) => {
         return new Promise((resolve, reject) => {
@@ -39,10 +52,19 @@ const storage = new GridFsStorage({
         });
     }
   });
-  
   const upload = multer({ storage });
 
-// const upload = multer({ dest: "uploads/" });
+
+
+  export const getSong = async(req:any, res:any)=>{
+    try {
+        const songDB = await GridFsStorage.find({});
+        res.send({songs:songDB})
+    } catch (error) {
+        console.error(error)
+    }
+}
+
 
 export const uploadSong = (upload.single("file"), async(req:any, res:any, next:any) => {
   console.log(req.file) //after it will return the value of file
@@ -89,16 +111,6 @@ export const uploadSong = (upload.single("file"), async(req:any, res:any, next:a
 // });
 
 // const url = SONGS_MONGO_URI;
-    const connect = mongoose.createConnection(MONGO_URI);
-
-    let gridFS;
-
-    connect.once('open', () => {
-        // initialize stream
-        gridFS = new mongoose.mongo.GridFSBucket(connect.db, {
-            bucketName: "songUploads"
-        });
-    }); 
 
 //Delete a particular file using its ObjectId
 // export const deleteSong =((req, res, next) => {
