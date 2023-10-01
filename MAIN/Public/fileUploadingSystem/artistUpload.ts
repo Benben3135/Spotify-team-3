@@ -1,28 +1,84 @@
+const APIcontroller = (function(){
+    const cliendId = '';
+    const clientSecret = '';
 
-const redirect_uri = "http://127.0.0.1:5500/MAIN/Public/fileUploadingSystem/artistUpload.html"
+    //private methods
+    const _getToken = async () => {
+        const result = await fetch('https://accounts.spotify.com/api/token', {
+            method: 'POST',
+            headers: {
+                'Content-Type' : 'application/x-www-form-urlencoded',
+                'Authorization' : 'Basic ' + btoa(cliendId + ':' + clientSecret)
+            }, body: 'grant_type-client_credentials'
+        });
 
-let client_id = "";
-let client_secret = "";
+        const data = await result.json();
+        return data.access_token;// we will be able to use that bearer token to call a Spotify endpoint giving us actual playlists 
+    }
 
-const AUTHORIZE = "https://accounts.spotify.com/authorize"
+    const _getGenres = async (token)=> {
+        const result = await fetch('https://api.spotify.com/v1/browse/categories' , {
+            method: 'GET',
+            headers: {'Authorization': 'Bearer ' + token}
+        });
 
-function onPageLoad(){
+        const data = await result.json();
+        return data.categories.items;
+    }
 
-}
+    const _getPlaylistByGenre = async (token, genreId)=>{
 
+        const limit = 10;
 
+        const result = await fetch(`https://api.spotify.com/v1/browse/categories/${genreId}/playlists?limit=${limit}`,{
+            method: 'GET',
+            headers: {'Authorization': 'Bearer ' + token}
+        });
 
-function requestAuthorization(){
-    client_id = (document.querySelector("#clientId") as HTMLInputElement).value;
-    client_secret = (document.querySelector("#clientSecret") as HTMLInputElement).value;
-    localStorage.setItem("client_id", client_id);
-    localStorage.setItem("client_secret",client_secret); //In a real app you should not expose your client_secret to the user
+        const data = await result.json();
+        return data.playlists.items;
+    }
 
-    let url = AUTHORIZE;
-    url += "?client_id=" + client_id;
-    url += "&response-type=code";
-    url += "&redirect_uri=" + encodeURI(redirect_uri);
-    url += "&show_dialog=true";
-    url += "&scope=user-read-private user-read-email user-modify-playback-state user-read-playback-position user-library-read streaming user-read-playback-state user-read-recently-played playlist-read-private" //permissions we want from spotify
-    window.location.href = url; //Show Spotify's authorization screen
-}
+    const _getTracks = async(token, tracksEndPoint)=>{
+        const limit = 10;
+
+        const result = await fetch(`${tracksEndPoint}?limit=${limit}`,{
+            method: 'GET',
+            headers: {'Authorization': 'Bearer ' + token}
+        });
+
+        const data = await result.json();
+        return data.items;
+    }
+
+    const _getTrack = async (token, trackEndPoint) => {
+
+        const result = await fetch(`${trackEndPoint}`,{
+            method: 'GET',
+            headers: {'Authorization': 'Bearer ' + token}
+        });
+
+        const data = await result.json();
+        return data;
+    }
+
+    return {
+        getToken(){
+            return _getToken();
+        },
+        getGenres(token){
+            return _getGenres(token);
+        },
+        getPlaylistByGenre(token, genreId) {
+            return _getPlaylistByGenre(token, genreId);
+        },
+        getTracks(token, tracksEndPoint){
+            return _getTracks(token, tracksEndPoint);
+        },
+        _getTrack(token, trackEndPoint){
+            return _getTrack(token, trackEndPoint);
+        }
+    }
+    //By these two parentheses below we know that this module is an iffy(it cause the function to fire immediately) 
+}())
+
