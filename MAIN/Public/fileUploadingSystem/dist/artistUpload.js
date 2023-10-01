@@ -148,5 +148,5 @@ var APIcontroller = (function () {
             return _getTrack(token, trackEndPoint);
         }
     };
-    //By these two parentheses below we know that this module is an iffy(it cause the function to fire immediately) 
+    //By these two parentheses below we know that this module is an iffy(it cause the function to fire immediately.) 
 }());
