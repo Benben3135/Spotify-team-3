@@ -36,8 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var APIcontroller = (function () {
     var _this = this;
-    var cliendId = '';
-    var clientSecret = '';
+    var cliendId = 'd93b29fc7e23418d902c640d9fa04579';
+    var clientSecret = '2d2d026500254369bcf690a008ac1524';
     //private methods
     var _getToken = function () { return __awaiter(_this, void 0, void 0, function () {
         var result, data;
@@ -144,9 +144,123 @@ var APIcontroller = (function () {
         getTracks: function (token, tracksEndPoint) {
             return _getTracks(token, tracksEndPoint);
         },
-        _getTrack: function (token, trackEndPoint) {
+        getTrack: function (token, trackEndPoint) {
             return _getTrack(token, trackEndPoint);
         }
     };
     //By these two parentheses below we know that this module is an iffy(it cause the function to fire immediately.) 
 }());
+//UI Module
+var UIController = (function () {
+    //object to hold references to html selectores
+    var DOMElements = {
+        selectGenre: "#select_genre",
+        selectPlaylist: "#select_playlist",
+        buttonSubmit: "#btn_submit",
+        divSongDetail: "#song-detail",
+        htToken: "#hidden_token",
+        divSonglist: ".song-list"
+    };
+    //public methods
+    return {
+        //method to get input fields
+        inputField: function () {
+            return {
+                genre: document.querySelector(DOMElements.selectGenre),
+                playlist: document.querySelector(DOMElements.selectPlaylist),
+                songs: document.querySelector(DOMElements.divSonglist),
+                submit: document.querySelector(DOMElements.buttonSubmit),
+                songDetail: document.querySelector(DOMElements.divSongDetail)
+            };
+        },
+        //need methods to create select list option
+        createGenre: function (text, value) {
+            var html = "<option value=\"" + value + "\">" + text + "</option>";
+            document.querySelector(DOMElements.selectGenre).insertAdjacentHTML('beforeend', html);
+        },
+        createPlaylist: function (text, value) {
+            var html = "<option value=\"" + value + "\">" + text + "</option>";
+            document.querySelector(DOMElements.selectPlaylist).insertAdjacentHTML('beforeend', html);
+        },
+        //need method to create a track list group item
+        createTrack: function (id, name) {
+            var html = "<a href=\"#\" class=\"list-group-item list-group-item-action list-group-item-light\" id=\"" + id + "\">" + name + "</a>";
+            document.querySelector(DOMElements.divSonglist).insertAdjacentHTML('beforeend', html);
+        },
+        //need method to create the song detail
+        createSongDetail: function (img, title, artist) {
+            var detailDiv = document.querySelector(DOMElements.divSongDetail);
+            //any time user clicks a new song, we need to clear out the song detail div
+            detailDiv.innerHTML = '';
+            var html = "\n            <div class=\"row col-sm-12 px-0\">\n                    <img src=\"" + img + "\" alt=\"\">\n                </div>    \n                <div class=\"row col-sm-12 px-0\">\n                    <label for=\"Genre\" class=\"form-label col-sm-12\">" + title + ":</label>\n                </div>         \n                <div class=\"row col-sm-12 px-0\">\n                    <label for=\"artist\" class=\"form-label col-sm-12\">" + artist + ":</label>\n                </div>       \n            ";
+            detailDiv.insertAdjacentHTML('beforeend', html);
+        },
+        resetTrackDetail: function () {
+            this.inputField().songDetail.innerHTML = '';
+        },
+        resetTracks: function () {
+            this.inputField().songs.innerHTML = '';
+            this.resetTrackDetail();
+        },
+        resetPlaylist: function () {
+            this.inputField().playlist.innerHTML = '';
+            this.resetTracks();
+        }
+    };
+})();
+var APPController = (function (UICtrl, APICtrl) {
+    var _this = this;
+    //get input field object ref
+    var DOMInputs = UICtrl.inputField();
+    //get genres on page load
+    var loadGenres = function () { return __awaiter(_this, void 0, void 0, function () {
+        var token, genres;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, APICtrl.getToken()];
+                case 1:
+                    token = _a.sent();
+                    return [4 /*yield*/, APICtrl.getGenres(token)];
+                case 2:
+                    genres = _a.sent();
+                    //populate our genres select element
+                    genres.forEach(function (element) { return UICtrl.createGenre(element.name, element.id); });
+                    return [2 /*return*/];
+            }
+        });
+    }); };
+    //create genre change event listener
+    DOMInputs.genre.addEventListener('change', function () { return __awaiter(_this, void 0, void 0, function () {
+        var token, genreSelect, genreId, playlist;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    //when user changes genres, we need to reset the subsequent fields
+                    UICtrl.resetPlaylist();
+                    token = UICtrl.getStoredToken().token;
+                    genreSelect = UICtrl.inputField().genre;
+                    genreId = genreSelect.options[genreSelect.selectedIndex].value;
+                    return [4 /*yield*/, APICtrl.getPlaylistByGenre(token, genreId)];
+                case 1:
+                    playlist = _a.sent();
+                    //load the playlist select field
+                    console.log(playlist);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    //create submit button click event listenet
+    DOMInputs.submit.addEventListener('click', function (e) { return __awaiter(_this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            e.preventDefault();
+            return [2 /*return*/];
+        });
+    }); });
+    //create song selection click event listener
+    DOMInputs.songs.addEventListener('click', function (e) { return __awaiter(_this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            e.preventDefault();
+            return [2 /*return*/];
+        });
+    }); });
+})();
