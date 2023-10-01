@@ -19,4 +19,4 @@ export class ArtistSongs {
     ){}
 }
 
-export const artistSongs: ArtistSongs[] = []
+export const artistSongs: ArtistSongs[] = [];
