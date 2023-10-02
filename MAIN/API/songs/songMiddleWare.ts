@@ -1,11 +1,11 @@
 //for validation like acceptable file types, max file size etc
-import path from 'path'
-import multer from 'multer'
+import path from 'path' // imports the Node.js path module, which provides utilities for working with file and directory paths
+import multer from 'multer' //used for file uploads
 
 const storage = multer.diskStorage({
     destination: function(req,file,cb){
-        //locatiion where the file will be saved
-        cb(null, 'uploads/') 
+        //determines the destination directory where the uploaded files will be stored
+        cb(null, 'uploads/')   //cd=callback function
     },
     filename: function(req,file,cb) {
         //rename a file with current timestamp and the extension
@@ -13,6 +13,11 @@ const storage = multer.diskStorage({
         cb(null, Date.now()+ ext)
     }
 })
+
+//this code sets up a multer storage engine (diskStorage) with a specific destination directory (uploads/)
+// for storing uploaded files and generates filenames based on the current timestamp and 
+//the original file extension. This storage configuration can be used when configuring a multer 
+//middleware to handle file uploads in a Node.js application
 
 export const upload = multer ({
     storage: storage,
