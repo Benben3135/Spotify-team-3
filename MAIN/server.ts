@@ -20,7 +20,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
-
+app.use(methodOverride('_method'))
 
 
 //middlware for using parser
@@ -50,6 +50,7 @@ const { SONGS_MONGO_URI } = process.env;
 const conn = mongoose.createConnection(SONGS_MONGO_URI);
 
 let gfs;
+
 conn.once('open', () => {
   //init stream
   gfs = Grid(conn.db, mongoose.mongo);
@@ -71,9 +72,11 @@ const storage = new GridFsStorage({
         if (err) {
           return reject(err);
         }
-        const filename = buf.toString("hex") + path.extname(file.originalname);
+        const filename = file.originalname;
         const fileInfo = {
           filename: filename,
+          artist: req.body.artist,
+          name: req.body.songName,
           bucketName: "uploads",
         };
         console.log("new file created")
@@ -89,32 +92,6 @@ app.post("/upload", upload.single("file"), (req: any, res: any) => {
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
-  const metadata = {
-    artist: req.body.artist, // Example: Get the artist name from the request body
-    songName: req.body.songName, // Example: Get the song name from the request body
-  };
-  console.log(metadata)
-  const fileInfo = {
-    filename: req.file.filename,
-    bucketName: "uploads",
-    metadata: metadata, // Add the custom metadata here
-  };
-
-   // Create a writable stream for the file
-   const writestream = gfs.createWriteStream({
-    filename: req.file.filename,
-    metadata: metadata, // Add custom metadata here
-  });
-
-  // Pipe the file buffer to the writable stream
-  writestream.write(req.file.buffer);
-  writestream.end();
-  
-  gfs.writeFile(fileInfo, req.file.buffer, (error) => {
-    if (error) {
-      return res.status(500).send("Error uploading file.");
-    }})
-
   
   res.redirect("/")
 });

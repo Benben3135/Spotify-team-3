@@ -19,6 +19,7 @@ require("dotenv/config");
 const app = express_1.default();
 const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
+app.use(methodOverride('_method'));
 //middlware for using parser
 app.use(cookie_parser_1.default());
 //static files
@@ -58,9 +59,11 @@ const storage = new multer_gridfs_storage_1.GridFsStorage({
                 if (err) {
                     return reject(err);
                 }
-                const filename = buf.toString("hex") + path.extname(file.originalname);
+                const filename = file.originalname;
                 const fileInfo = {
                     filename: filename,
+                    artist: req.body.artist,
+                    name: req.body.songName,
                     bucketName: "uploads",
                 };
                 console.log("new file created");
@@ -74,29 +77,6 @@ app.post("/upload", upload.single("file"), (req, res) => {
     if (!req.file) {
         return res.status(400).send("No file uploaded.");
     }
-    const metadata = {
-        artist: req.body.artist,
-        songName: req.body.songName,
-    };
-    console.log(metadata);
-    const fileInfo = {
-        filename: req.file.filename,
-        bucketName: "uploads",
-        metadata: metadata,
-    };
-    // Create a writable stream for the file
-    const writestream = gfs.createWriteStream({
-        filename: req.file.filename,
-        metadata: metadata,
-    });
-    // Pipe the file buffer to the writable stream
-    writestream.write(req.file.buffer);
-    writestream.end();
-    gfs.writeFile(fileInfo, req.file.buffer, (error) => {
-        if (error) {
-            return res.status(500).send("Error uploading file.");
-        }
-    });
     res.redirect("/");
 });
 app.get("/play/:filename", (req, res) => {
