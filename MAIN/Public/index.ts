@@ -21,3 +21,7 @@ async function handleSignIn(ev:any){
         console.error(error)
     }
 }
+
+function registerPage() {
+    window.location.href = "./Register/register.html";
+}

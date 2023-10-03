@@ -19,8 +19,9 @@
     <div class="wrapper">
         <img id="logo_img" src="../Files_To_Use/melodica__1_-removebg-preview.png" alt="">
         <h1 id="logo">SoundMaster</h1>
-        <form onsubmit="handleUpload()" action="/upload" method="POST" enctype="multipart/form-data">
+        <form action="/upload" method="POST" enctype="multipart/form-data">
             <input type="text" name="name" id="name" placeholder="Song Name">
+            <input type="text" name="artist" id="artist" placeholder="artist Name">
             <input style="color: aliceblue; margin: 0;" type="file" name="file" id="file">
             <input id="submit" type="submit" value="submit">
         </form>

@@ -37,7 +37,7 @@ mongoose_1.default.connect(MONGO_URI).then(() => {
 //setting the songs DB:
 const { SONGS_MONGO_URI } = process.env;
 const conn = mongoose_1.default.createConnection(SONGS_MONGO_URI);
-let gfs; //from here i think it belong to API folder
+let gfs;
 conn.once('open', () => {
     //init stream
     gfs = Grid(conn.db, mongoose_1.default.mongo);
@@ -63,7 +63,10 @@ const storage = new multer_gridfs_storage_1.GridFsStorage({
                 const fileInfo = {
                     filename: filename,
                     artist: req.body.artist,
-                    name: req.body.songName,
+                    metadata: {
+                        name: req.body.name,
+                        artist: req.body.artist,
+                    },
                     bucketName: "uploads",
                 };
                 console.log("new file created");
@@ -72,16 +75,20 @@ const storage = new multer_gridfs_storage_1.GridFsStorage({
         });
     },
 });
+//gfs.createWriteStream(file.filename, fileInfo.name)
 const upload = multer({ storage });
 app.post("/upload", upload.single("file"), (req, res) => {
     if (!req.file) {
         return res.status(400).send("No file uploaded.");
     }
-    res.redirect("/");
+    const fileInfo = req.file; // The fileInfo is available in req.file
+    console.log(fileInfo);
+    res.redirect("/Main/main.html"); //אולי עדיף להישאר בדף העלאה ולצאת משם באמצעות לחצן?
 });
-app.get("/play/:filename", (req, res) => {
-    const filename = req.params.filename;
-    gfs.files.findOne({ filename }, (err, file) => {
+app.get("/play/userName", (req, res) => {
+    const filename = req.params;
+    console.log('you in app.get');
+    gfs.files.find({}, (err, file) => {
         if (err || !file) {
             return res.status(404).json({
                 err: "File not found",
@@ -98,8 +105,6 @@ app.get("/play/:filename", (req, res) => {
         readstream.pipe(res);
     });
 });
-//end
-//this part stay on server.ts
 const userRouter_1 = __importDefault(require("./API/users/userRouter"));
 app.use("/API/users", userRouter_1.default);
 app.listen(port, () => {

@@ -72,3 +72,6 @@ function handleSignIn(ev) {
         });
     });
 }
+function registerPage() {
+    window.location.href = "./Register/register.html";
+}
