@@ -38,7 +38,7 @@ export const store = (req, res, next) => {
         genre: req.body.genre
     })
     if(req.file){
-        song.avatar = req.file.path
+        song.file = req.file.path
     }
     song.save()
     .then(response => {

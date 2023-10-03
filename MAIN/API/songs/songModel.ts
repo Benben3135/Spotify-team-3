@@ -8,9 +8,9 @@ const SongSchema = new Schema({
     genre: {
         type: String
     },
-    avatar: {
+    file: {
         type: String
     }
-}, {timestamps: true})
+}, )
 
 export const Song = mongoose.model('Song', SongSchema)

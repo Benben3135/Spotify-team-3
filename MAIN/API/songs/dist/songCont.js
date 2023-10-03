@@ -35,7 +35,7 @@ exports.store = function (req, res, next) {
         genre: req.body.genre
     });
     if (req.file) {
-        song.avatar = req.file.path;
+        song.file = req.file.path;
     }
     song.save()
         .then(function (response) {

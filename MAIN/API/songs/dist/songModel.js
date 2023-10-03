@@ -10,8 +10,8 @@ var SongSchema = new Schema({
     genre: {
         type: String
     },
-    avatar: {
+    file: {
         type: String
     }
-}, { timestamps: true });
+});
 exports.Song = mongoose_1["default"].model('Song', SongSchema);
