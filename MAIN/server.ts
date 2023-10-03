@@ -49,7 +49,7 @@ mongoose.connect(MONGO_URI).then(() => {
 const { SONGS_MONGO_URI } = process.env;
 const conn = mongoose.createConnection(SONGS_MONGO_URI);
 
-let gfs;
+let gfs;   //from here i think it belong to API folder
 
 conn.once('open', () => {
   //init stream
@@ -120,13 +120,13 @@ app.get("/play/:filename", (req, res) => {
   });
 });
 
+//end
 
 
 
 
 
-
-
+//this part stay on server.ts
 
 import userRouter from "./API/users/userRouter";
 app.use("/API/users", userRouter);

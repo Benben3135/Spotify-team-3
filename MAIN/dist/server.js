@@ -37,7 +37,7 @@ mongoose_1.default.connect(MONGO_URI).then(() => {
 //setting the songs DB:
 const { SONGS_MONGO_URI } = process.env;
 const conn = mongoose_1.default.createConnection(SONGS_MONGO_URI);
-let gfs;
+let gfs; //from here i think it belong to API folder
 conn.once('open', () => {
     //init stream
     gfs = Grid(conn.db, mongoose_1.default.mongo);
@@ -98,6 +98,8 @@ app.get("/play/:filename", (req, res) => {
         readstream.pipe(res);
     });
 });
+//end
+//this part stay on server.ts
 const userRouter_1 = __importDefault(require("./API/users/userRouter"));
 app.use("/API/users", userRouter_1.default);
 app.listen(port, () => {
