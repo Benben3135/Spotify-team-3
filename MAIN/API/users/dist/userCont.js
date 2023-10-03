@@ -55,16 +55,18 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 return [4 /*yield*/, userModel_1.UserModelDB.findOne({ email: email })];
             case 1:
                 userDB = _b.sent();
-                if (!userDB)
-                    throw new Error("some of the details are incorrect");
+                if (!userDB) {
+                    res.send({ error: "Email never registered" });
+                }
                 hash = userDB.password;
                 if (!hash)
                     throw new Error("some of the details are incorrect");
                 return [4 /*yield*/, bcrypt.compare(password, hash)];
             case 2:
                 match = _b.sent();
-                if (!match)
-                    throw new Error("some of the details are incorrect");
+                if (!match) {
+                    res.send({ error: "Password don't match!" });
+                }
                 cookie = {
                     email: userDB.email,
                     uid: userDB._id,

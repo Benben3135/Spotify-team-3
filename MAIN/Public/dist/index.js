@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 function handleSignIn(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var email, password, response, data, error_1;
+        var email, password, response, data, alert, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -56,8 +56,11 @@ function handleSignIn(ev) {
                     return [4 /*yield*/, response.json()];
                 case 2:
                     data = _a.sent();
-                    if (data.error)
-                        throw new Error(data.error);
+                    if (data.error) {
+                        alert = document.querySelector("#alert");
+                        alert.style.display = "block";
+                        alert.textContent = data.error;
+                    }
                     window.location.href = "Main/main.html";
                     return [3 /*break*/, 4];
                 case 3:
@@ -68,4 +71,7 @@ function handleSignIn(ev) {
             }
         });
     });
+}
+function registerPage() {
+    window.location.href = "./Register/register.html";
 }

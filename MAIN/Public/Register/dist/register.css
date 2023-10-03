@@ -99,3 +99,7 @@ input::placeholder {
   color: black;
   width: 4.5vw;
 }
+
+#register {
+  margin-top: 300px;
+}

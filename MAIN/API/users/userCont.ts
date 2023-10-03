@@ -14,13 +14,17 @@ export const login = async (req: any, res: any) => {
     if (!email || !password) throw new Error("Please complete all fields");
 
     const userDB = await UserModelDB.findOne({ email });
-    if (!userDB) throw new Error("some of the details are incorrect");
+    if (!userDB){
+      res.send({ error: "Email never registered" })
+    }
     const { password: hash } = userDB;
     if (!hash) throw new Error("some of the details are incorrect");
 
     //check if hash password is equal to the password that the user entered
     const match:boolean = await bcrypt.compare(password, hash);
-    if (!match) throw new Error("some of the details are incorrect");
+    if (!match){
+      res.send({ error: "Password don't match!" })
+    }
 
     const cookie = {
       email: userDB.email,

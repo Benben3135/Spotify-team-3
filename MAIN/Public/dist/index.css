@@ -99,3 +99,11 @@ input::placeholder {
   color: black;
   width: 4.5vw;
 }
+
+#alert {
+  color: red;
+  font-size: 12px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: none;
+}
