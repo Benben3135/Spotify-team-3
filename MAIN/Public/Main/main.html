@@ -13,9 +13,29 @@
 </head>
 <body">
     <video id="backVideo" autoplay src="../Files_To_Use/pexels-louai-munajim-5818973 (2160p).mp4"></video>
-    <button id="" action="/play" method="GET" enctype="multipart/form-data">GET your songs</button>  <!--יעלה את כל השירים של המשתמש-->
+    <a href="/play">
+        <button>GET your songs</button>
+      </a>
+        <!--יעלה את כל השירים של המשתמש-->
     <button id="">ADD your song</button>  <!--רק יוצר,עבור לעמוד של העלאת שירים-->
     <h1 id="logo">SoundMaster</h1>
+
+    <!-- <h1>Now Playing: <span id="filename"></span></h1>
+    <audio controls>
+      <source id="audioSource" type="audio/mp3">
+      Your browser does not support the audio element.
+    </audio>
+  
+    <script>
+      // Set the filename dynamically from the server
+      const filename = "<%= filename %>";
+      document.getElementById("filename").textContent = filename;
+  
+      // Set the source of the audio element dynamically
+      const audioSource = document.getElementById("audioSource");
+      audioSource.src = `/stream/${filename}`;
+    </script> -->
+
     <a href="../fileUploadingSystem/system.html"></a>
 
 
