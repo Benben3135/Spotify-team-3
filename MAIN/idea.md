@@ -2,14 +2,14 @@ this is benjamin, hadar, daniel & tamar team project
 
 A song site (like spotify):
 
-antetis:
+enteties:
 1) regular user
 2) creator user
 3) songs
 
 join collection:
 1) user-songs
-2) creator-songs
+2) Artist-songs
 
 controllers:
 1) is creator?
