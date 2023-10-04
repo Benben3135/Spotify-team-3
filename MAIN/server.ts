@@ -99,6 +99,7 @@ const storage = new GridFsStorage({
             name: req.body.name,
             artist: req.query.artist,
             genre: req.body.genre,
+            img: req.body.img,
             // Add more parameters as needed
           },
           bucketName: "uploads",
@@ -122,6 +123,16 @@ app.post("/upload", upload.single("file"), (req: any, res: any) => {
   const fileInfo = req.file; // The fileInfo is available in req.file
   console.log(fileInfo);
   res.redirect("/Main/main.html") //אולי עדיף להישאר בדף העלאה ולצאת משם באמצעות לחצן?
+});
+
+app.get("/get-songs", async (req, res) => {
+  try {
+    const songs = await gfs.files.find().toArray();
+    res.json(songs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 //ouer:

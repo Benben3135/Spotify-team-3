@@ -13,12 +13,12 @@
 </head>
 <body">
     <video id="backVideo" autoplay src="../Files_To_Use/pexels-louai-munajim-5818973 (2160p).mp4"></video>
-    <a href="/play">
-        <button>GET your songs</button>
-      </a>
-        <!--יעלה את כל השירים של המשתמש-->
-    <button id="">ADD your song</button>  <!--רק יוצר,עבור לעמוד של העלאת שירים-->
+    <div class="upperBar">
+      <a href="../index.html"><i class="fas fa-door-closed fa-lg door-closed upperBar__icon" style="color: #ffffff;"></i></a>
+      <div onclick="docs()"><i class="fas fa-burger fa-lg burger upperBar__icon" style="color: #ffffff;"></i></div>
+    </div>
     <h1 id="logo">SoundMaster</h1>
+    <h2 id="creatorTXT">creator version</h2>
 
     <!-- <h1>Now Playing: <span id="filename"></span></h1>
     <audio controls>
@@ -35,9 +35,47 @@
       const audioSource = document.getElementById("audioSource");
       audioSource.src = `/stream/${filename}`;
     </script> -->
+    <div class="docs">
+      <h1 class="docs__header">SOUNDMASTER</h1>
+      <h2 class="docs__text">Welcome to SOUNDMASTER, where music comes to life! 🎶
 
-    <a href="../fileUploadingSystem/system.html"></a>
-    <button id="uploadBtn"></button>
+        Discover a world of endless tunes and rhythm that suits every mood, moment, and melody. Whether you're a music enthusiast, a casual listener, or an aspiring artist, our app is designed to elevate your music experience.
+        
+        Key Features:
+        
+        🎵 Extensive Music Library: Dive into a vast collection of songs, albums, and playlists spanning across genres, eras, and cultures.
+        
+        🔀 Personalized Playlists: Enjoy handcrafted playlists tailored to your preferences, and let our algorithms introduce you to new tracks you'll love.
+        
+        🎧 Offline Listening: Take your music with you wherever you go, even when you're offline, with our downloadable tracks and playlists.
+        
+        📱 Cross-Platform Compatibility: Seamlessly switch between devices and continue your music journey on your phone, tablet, or computer.
+        
+        🎤 Karaoke Mode: Unleash your inner rock star with our interactive karaoke feature and sing along to your favorite songs.
+        
+        🎶 Artist Insights: Get to know the stories behind the music with exclusive artist interviews, behind-the-scenes content, and more.
+        
+        Join our vibrant community of music lovers and start exploring the symphony of sounds waiting for you. Whether you're into chart-toppers, underground beats, or timeless classics, [Your Music App Name] has something for everyone.
+        
+        Experience the magic of music like never before. Download [Your Music App Name] now and let the rhythm take over your world.
+        
+        Turn up the volume, and let's get grooving! 🎉🕺💃</h2>
+        <h3 class="docs__user"></h3>
+    </div>
+
+    <h2 class="boxHeader">Reccomended For You</h2>
+    <div class="songsBox" id="reccomended">
+
+    </div>
+    <h2 class="boxHeader">Your favorite genres</h2>
+    <div class="songsBox" id="genre">
+
+    </div>
+    <h2 class="boxHeader">Song you liked</h2>
+    <div class="songsBox" id="liked">
+
+    </div>
+
 
 
 

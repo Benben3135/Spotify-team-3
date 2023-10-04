@@ -16,6 +16,10 @@ async function handleRegister(ev: any) {
         body: JSON.stringify(user),
       });
       const data = await response.json();
+      if (data.error) {
+        alert(data.error);
+        return;
+      }
  
       window.location.href = `http://localhost:3000/index.html`;
 

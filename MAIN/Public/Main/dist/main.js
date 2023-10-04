@@ -34,6 +34,42 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+getUserData();
+var User = /** @class */ (function () {
+    function User(name, email, password, admin, createdAt, artistName) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.admin = admin;
+        this.createdAt = createdAt;
+        this.artistName = artistName;
+    }
+    return User;
+}());
+//--------------
+function getUserData() {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, user;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch("/API/users/get-User")];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    user = _a.sent();
+                    return [2 /*return*/, user];
+            }
+        });
+    });
+}
+//function that changes the deocument title according to users name
+function manageTitle() {
+    var user = getUserData();
+    // const name = user.name;
+    var title = document.querySelector('#title');
+    title.innerHTML = "SoundMaster";
+}
 isArtist();
 function isArtist() {
     return __awaiter(this, void 0, void 0, function () {
@@ -60,10 +96,17 @@ function isArtist() {
     });
 }
 function buildArtistUtilities(name) {
+    addUploadBtn();
     artistGreeting(name);
     artistUpload(name);
+    artistPageBtn(name);
+    artistTXT();
 }
 //artist functions:
+function addUploadBtn() {
+    var upperBar = document.querySelector(".upperBar");
+    upperBar.innerHTML += "<div id=\"uploadBtn\"><i class=\"fas fa-upload fa-lg upload upperBar__icon\" style=\"color: #ffffff;\"></i></div>    <div id=\"artistPageBtn\"><i class=\"fas fa-music fa-lg music upperBar__icon\" style=\"color: #ffffff;\"></i></div>";
+}
 function artistGreeting(name) {
 }
 function artistUpload(name) {
@@ -73,27 +116,56 @@ function artistUpload(name) {
         location.href = "../fileUploadingSystem/artistUpload.html?name=" + name;
     });
 }
-//--------------
-function getUserData() {
+function artistPageBtn(name) {
+    var artistPageBtn = document.querySelector("#artistPageBtn");
+    artistPageBtn.style.display = "block";
+    artistPageBtn.addEventListener("click", function () {
+        // artistPage(name);
+    });
+}
+function artistTXT() {
+    var creatorTXT = document.querySelector("#creatorTXT");
+    creatorTXT.style.display = "block";
+}
+function docs() {
     return __awaiter(this, void 0, void 0, function () {
-        var response, user;
+        var user, name, createdAt, createdAtDate, year, month, day, createdAtString, admin, docs, userData;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, fetch("/API/users/get-User")];
+                case 0: return [4 /*yield*/, getUserData()];
                 case 1:
-                    response = _a.sent();
-                    return [4 /*yield*/, response.json()];
-                case 2:
                     user = _a.sent();
-                    return [2 /*return*/, user];
+                    name = user.name;
+                    createdAt = user.createdAt;
+                    createdAtDate = new Date(createdAt);
+                    year = createdAtDate.getFullYear();
+                    month = createdAtDate.getMonth() + 1;
+                    day = createdAtDate.getDay();
+                    createdAtString = day + "/" + month + "/" + year;
+                    admin = user.admin;
+                    docs = document.querySelector(".docs");
+                    docs.style.display = "flex";
+                    document.addEventListener("click", function () {
+                        docs.style.display = "none";
+                    });
+                    userData = document.querySelector(".docs__user");
+                    if (admin)
+                        userData.innerHTML = "Username: " + name + " <br> Created at: " + createdAtString + " <br> OFFICIAL CREATOR";
+                    else {
+                        userData.innerHTML = "Username: " + name + " <br> Created at: " + createdAt + " ";
+                    }
+                    return [2 /*return*/];
             }
         });
     });
 }
-//function that changes the deocument title according to users name
-function manageTitle() {
-    var user = getUserData();
-    // const name = user.name;
-    var title = document.querySelector('#title');
-    title.innerHTML = "SoundMaster";
-}
+//getting the songs from the server:
+fetch("/get-songs")
+    .then(function (response) { return response.json(); })
+    .then(function (data) {
+    console.log(data);
+    // Now, `data` contains the list of songs
+    // You can render the songs or perform other actions here
+})["catch"](function (error) {
+    console.error("Error fetching songs:", error);
+});

@@ -59,6 +59,10 @@ export const register = async (req: any, res: any) => {
     res.send({ ok: true, userDB });}
 
     if(artistName){
+      const userCheck = await UserModelDB.findOne({ artistName });
+      if(userCheck){
+        res.send({ error: "Artist name already exists" })
+      }
       const user = new UserModelDB({ name ,email, password: hash,admin:true, artistName});
     const userDB = await user.save();
     console.log(userDB)

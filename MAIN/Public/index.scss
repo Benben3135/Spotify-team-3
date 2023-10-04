@@ -119,3 +119,19 @@ input{
     margin-bottom: 10px;
     display: none;
 }
+#register{
+    @include button;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+a{
+    margin-top: 10px;
+    font-family: fantasy;
+    text-decoration: none;
+    color: aliceblue;
+    transition: all 0.2s ease-in-out;
+    &:hover{
+        color: rgb(218, 137, 137);
+        transform: scale(1.1);
+    }
+}

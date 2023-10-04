@@ -88,11 +88,11 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
     });
 }); };
 exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, name, email, password, artistName, hash, user, userDB, user, userDB, error_2;
+    var _a, name, email, password, artistName, hash, user, userDB, userCheck, user, userDB, error_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 6, , 7]);
+                _b.trys.push([0, 7, , 8]);
                 _a = req.body, name = _a.name, email = _a.email, password = _a.password, artistName = _a.artistName;
                 if (!email || !password)
                     throw new Error("Please complete all fields");
@@ -108,21 +108,27 @@ exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0
                 res.send({ ok: true, userDB: userDB });
                 _b.label = 3;
             case 3:
-                if (!artistName) return [3 /*break*/, 5];
+                if (!artistName) return [3 /*break*/, 6];
+                return [4 /*yield*/, userModel_1.UserModelDB.findOne({ artistName: artistName })];
+            case 4:
+                userCheck = _b.sent();
+                if (userCheck) {
+                    res.send({ error: "Artist name already exists" });
+                }
                 user = new userModel_1.UserModelDB({ name: name, email: email, password: hash, admin: true, artistName: artistName });
                 return [4 /*yield*/, user.save()];
-            case 4:
+            case 5:
                 userDB = _b.sent();
                 console.log(userDB);
                 res.send({ ok: true, userDB: userDB });
-                _b.label = 5;
-            case 5: return [3 /*break*/, 7];
-            case 6:
+                _b.label = 6;
+            case 6: return [3 /*break*/, 8];
+            case 7:
                 error_2 = _b.sent();
                 console.error(error_2);
                 res.send({ error: error_2.message });
-                return [3 /*break*/, 7];
-            case 7: return [2 /*return*/];
+                return [3 /*break*/, 8];
+            case 8: return [2 /*return*/];
         }
     });
 }); };

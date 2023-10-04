@@ -61,6 +61,10 @@ function handleRegister(ev) {
                     return [4 /*yield*/, response.json()];
                 case 2:
                     data = _a.sent();
+                    if (data.error) {
+                        alert(data.error);
+                        return [2 /*return*/];
+                    }
                     window.location.href = "http://localhost:3000/index.html";
                     return [3 /*break*/, 6];
                 case 3:

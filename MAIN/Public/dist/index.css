@@ -107,3 +107,36 @@ input::placeholder {
   margin-bottom: 10px;
   display: none;
 }
+
+#register {
+  width: 4vw;
+  height: 4vh;
+  background-color: #3c413b;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 2px 2px 10px black;
+  border: transparent;
+  font-family: fantasy;
+  color: aliceblue;
+  transition: all 0.2s ease-in-out;
+  margin-top: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+#register:hover {
+  background-color: rgba(205, 214, 236, 0.8);
+  color: black;
+  width: 4.5vw;
+}
+
+a {
+  margin-top: 10px;
+  font-family: fantasy;
+  text-decoration: none;
+  color: aliceblue;
+  transition: all 0.2s ease-in-out;
+}
+a:hover {
+  color: #da8989;
+  transform: scale(1.1);
+}
