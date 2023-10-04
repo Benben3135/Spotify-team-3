@@ -84,6 +84,13 @@ export const getUser = async (req: any, res: any) => {
 }
 
 
-
+export const addArtistFunc = async (req: any, res: any) => {
+  try {
+    res.send(ok:true)
+  } catch (error) {
+    console.error(error);
+    res.send({ error: error.message });
+  }
+}
 
 

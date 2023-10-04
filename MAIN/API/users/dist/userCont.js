@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.getUser = exports.register = exports.login = void 0;
+exports.addArtistFunc = exports.getUser = exports.register = exports.login = void 0;
 var userModel_1 = require("./userModel");
 var bcrypt = require('bcrypt');
 var jwt = require('jwt-simple');
@@ -139,5 +139,17 @@ exports.getUser = function (req, res) { return __awaiter(void 0, void 0, void 0,
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
+    });
+}); };
+exports.addArtistFunc = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        try {
+            res.send(ok, true);
+        }
+        catch (error) {
+            console.error(error);
+            res.send({ error: error.message });
+        }
+        return [2 /*return*/];
     });
 }); };

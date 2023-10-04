@@ -1,3 +1,15 @@
+async function isArtist(){
+    const response = await fetch(`API/user/addArtistFunc`);
+    const isArtist = await response.json();
+    if (isArtist){
+        buildArtistUtilities()
+    }
+}
+
+function buildArtistUtilities(){
+
+}
+
 async function getUserData(){
     const response = await fetch(`/API/users/get-User`);
         const user = await response.json();

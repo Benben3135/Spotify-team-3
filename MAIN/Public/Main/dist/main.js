@@ -34,6 +34,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+function isArtist() {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, isArtist;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch("API/user/addArtistFunc")];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    isArtist = _a.sent();
+                    if (isArtist) {
+                        buildArtistUtilities();
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function buildArtistUtilities() {
+}
 function getUserData() {
     return __awaiter(this, void 0, void 0, function () {
         var response, user;
