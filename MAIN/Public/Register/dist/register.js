@@ -36,16 +36,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 function handleRegister(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var name, email, password, user, response, data, error_1;
+        var name, email, password, artistName, user, response, data, user, response, data;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 3, , 4]);
                     ev.preventDefault();
                     name = ev.target.name.value;
                     email = ev.target.email.value;
                     password = ev.target.password.value;
-                    user = { name: name, email: email, password: password };
+                    artistName = ev.target.artistName.value;
+                    if (!artistName) return [3 /*break*/, 3];
+                    user = { name: name, email: email, password: password, artistName: artistName };
                     if (!user.email || !user.password)
                         throw new Error("missing some details");
                     return [4 /*yield*/, fetch("http://localhost:3000/API/users/register ", {
@@ -60,15 +61,27 @@ function handleRegister(ev) {
                     return [4 /*yield*/, response.json()];
                 case 2:
                     data = _a.sent();
-                    console.log(data);
-                    // go to Log in page   
                     window.location.href = "http://localhost:3000/index.html";
-                    return [3 /*break*/, 4];
+                    return [3 /*break*/, 6];
                 case 3:
-                    error_1 = _a.sent();
-                    console.error(error_1);
-                    return [3 /*break*/, 4];
-                case 4: return [2 /*return*/];
+                    user = { name: name, email: email, password: password };
+                    if (!user.email || !user.password)
+                        throw new Error("missing some details");
+                    return [4 /*yield*/, fetch("http://localhost:3000/API/users/register ", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(user)
+                        })];
+                case 4:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 5:
+                    data = _a.sent();
+                    window.location.href = "http://localhost:3000/index.html";
+                    _a.label = 6;
+                case 6: return [2 /*return*/];
             }
         });
     });

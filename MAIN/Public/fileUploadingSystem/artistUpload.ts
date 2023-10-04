@@ -146,3 +146,8 @@ async function handleUpdateName(ev:any){
 //         console.error(error)
 //     }
 // }
+
+function getNameFromQuery() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('name');
+}

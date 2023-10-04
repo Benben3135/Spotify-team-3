@@ -6,8 +6,10 @@ const SongSchema = new Schema({
         type: String
     },
     artist: {
-        type: String
+        type: String,
+        unique: true
     },
+    genre: String
 }, )
 
 export const Song = mongoose.model('Song', SongSchema)

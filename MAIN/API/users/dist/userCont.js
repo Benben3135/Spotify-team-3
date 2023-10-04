@@ -70,7 +70,8 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 cookie = {
                     email: userDB.email,
                     uid: userDB._id,
-                    admin: userDB.admin
+                    admin: userDB.admin,
+                    artistName: userDB.artistName
                 };
                 token = jwt.encode(cookie, secret);
                 console.log(token);
@@ -87,30 +88,41 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
     });
 }); };
 exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, name, email, password, hash, user, userDB, error_2;
+    var _a, name, email, password, artistName, hash, user, userDB, user, userDB, error_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                _b.trys.push([0, 3, , 4]);
-                _a = req.body, name = _a.name, email = _a.email, password = _a.password;
+                _b.trys.push([0, 6, , 7]);
+                _a = req.body, name = _a.name, email = _a.email, password = _a.password, artistName = _a.artistName;
                 if (!email || !password)
                     throw new Error("Please complete all fields");
                 return [4 /*yield*/, bcrypt.hash(password, saltRounds)];
             case 1:
                 hash = _b.sent();
+                if (!!artistName) return [3 /*break*/, 3];
                 user = new userModel_1.UserModelDB({ name: name, email: email, password: hash });
                 return [4 /*yield*/, user.save()];
             case 2:
                 userDB = _b.sent();
                 console.log(userDB);
                 res.send({ ok: true, userDB: userDB });
-                return [3 /*break*/, 4];
+                _b.label = 3;
             case 3:
+                if (!artistName) return [3 /*break*/, 5];
+                user = new userModel_1.UserModelDB({ name: name, email: email, password: hash, admin: true, artistName: artistName });
+                return [4 /*yield*/, user.save()];
+            case 4:
+                userDB = _b.sent();
+                console.log(userDB);
+                res.send({ ok: true, userDB: userDB });
+                _b.label = 5;
+            case 5: return [3 /*break*/, 7];
+            case 6:
                 error_2 = _b.sent();
                 console.error(error_2);
                 res.send({ error: error_2.message });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
         }
     });
 }); };
@@ -142,9 +154,13 @@ exports.getUser = function (req, res) { return __awaiter(void 0, void 0, void 0,
     });
 }); };
 exports.addArtistFunc = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var artistName;
     return __generator(this, function (_a) {
         try {
-            res.send(ok, true);
+            console.log("addArtistFunc started");
+            artistName = req.artistName;
+            console.log(artistName);
+            res.send({ artistName: artistName });
         }
         catch (error) {
             console.error(error);

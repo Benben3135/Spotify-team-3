@@ -4,12 +4,13 @@ exports.UserModelDB = exports.UserSchema = exports.User = void 0;
 //define a scheme
 var mongoose_1 = require("mongoose");
 var User = /** @class */ (function () {
-    function User(name, email, password, admin, createdAt) {
+    function User(name, email, password, admin, createdAt, artistName) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.admin = admin;
         this.createdAt = createdAt;
+        this.artistName = artistName;
     }
     return User;
 }());
@@ -25,6 +26,12 @@ exports.UserSchema = new mongoose_1.Schema({
     admin: {
         type: Boolean,
         "default": false
+    },
+    artistName: {
+        required: false,
+        type: String,
+        unique: true,
+        immutable: true
     },
     createdAt: {
         type: Date,

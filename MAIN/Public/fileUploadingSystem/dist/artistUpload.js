@@ -219,3 +219,7 @@ function handleUpdateName(ev) {
 //         console.error(error)
 //     }
 // }
+function getNameFromQuery() {
+    var urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('name');
+}

@@ -9,7 +9,8 @@ export class User{
     public email: string,
     public password: string,
     public admin: boolean,
-    public createdAt:Date
+    public createdAt:Date,
+    public artistName?: string,
     ){}
 }
 
@@ -26,6 +27,12 @@ export const UserSchema = new Schema({
   admin: {
     type: Boolean,
     default: false
+  },
+  artistName: {
+    required: false,
+    type: String,
+    unique:true,
+    immutable:true
   },
   createdAt: {
     type: Date,

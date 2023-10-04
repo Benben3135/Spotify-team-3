@@ -34,6 +34,24 @@ mongoose_1.default.connect(MONGO_URI).then(() => {
     .catch(err => {
     console.error(err);
 });
+const { SECRET } = process.env;
+const secret = SECRET;
+const jwt = require('jwt-simple');
+function getArtistName(req, res) {
+    try {
+        //take from cookie and decode cookie and check for admin role
+        const token = req.cookies.user;
+        if (!token)
+            throw new Error("no token");
+        const cookie = jwt.decode(token, secret);
+        //decoded cookie
+        const { artistName } = cookie;
+        req.artistName = artistName;
+    }
+    catch (error) {
+        res.status(401).send({ error: error.message });
+    }
+}
 //setting the songs DB:
 const { SONGS_MONGO_URI } = process.env;
 const conn = mongoose_1.default.createConnection(SONGS_MONGO_URI);
@@ -62,10 +80,10 @@ const storage = new multer_gridfs_storage_1.GridFsStorage({
                 const filename = file.originalname;
                 const fileInfo = {
                     filename: filename,
-                    artist: req.body.artist,
                     metadata: {
                         name: req.body.name,
-                        artist: req.body.artist,
+                        artist: req.query.artist,
+                        genre: req.body.genre,
                     },
                     bucketName: "uploads",
                 };

@@ -20,12 +20,38 @@
     <div class="wrapper">
         <img id="logo_img" src="../Files_To_Use/melodica__1_-removebg-preview.png" alt="">
         <h1 id="logo">SoundMaster</h1>
-        <form action="/upload" method="POST" enctype="multipart/form-data">
+        <form id="songForm" method="POST" enctype="multipart/form-data">
             <input type="text" name="name" id="name" placeholder="Song Name">
-            <input type="text" name="artist" id="artist" placeholder="artist Name">
+            <select name="genre" id="genre">
+                <option value="rock">rock<i class="fas fa-guitar fa-lg guitar" style="color: #fc0808;"></i></option>
+                <option value="pop">pop</option>
+                <option value="rap">rap</option>
+                <option value="metal">metal</option>
+                <option value="classic">classic</option>
+                <option value="ambient">ambient</option>
+                <option value="worldMusic">worldMusic</option>
+                <option value="HipHop">HipHop</option>
+                <option value="soul">soul</option>
+                <option value="jazz">jazz</option>
+                <option value="dance">dance</option>
+                <option value="techno">techno</option>
+                <option value="electronic">electronic</option>
+
+            </select>
             <input style="color: aliceblue; margin: 0;" type="file" name="file" id="file">
             <input id="submit" type="submit" value="submit">
         </form>
+        
+        <script>
+            const form = document.getElementById('songForm');
+            const artistQueryParam = window.location.search.substring(1).split('=')[1]; // Get the artist query parameter from the URL
+        
+            if (artistQueryParam) {
+                // Append the artist query parameter to the form's action URL
+                form.action = `/upload?artist=${artistQueryParam}`;
+            }
+        </script>
+        
     </div>
     <button id="getSongs" onclick="handleGetSong()">Get songs</button>
     <div id="rootSong"></div>

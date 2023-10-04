@@ -8,7 +8,9 @@ var SongSchema = new Schema({
         type: String
     },
     artist: {
-        type: String
-    }
+        type: String,
+        unique: true
+    },
+    genre: String
 });
 exports.Song = mongoose_1["default"].model('Song', SongSchema);

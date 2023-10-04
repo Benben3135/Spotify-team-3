@@ -1,15 +1,48 @@
+isArtist();
 async function isArtist(){
-    const response = await fetch(`API/user/addArtistFunc`);
-    const isArtist = await response.json();
-    if (isArtist){
-        buildArtistUtilities()
+    console.log("i started!")
+    const response = await fetch("http://localhost:3000/API/users/addArtistFunc");
+    const {artistName} = await response.json();
+    console.log(artistName);
+    if(!artistName) console.log("no admin")
+    else{
+    buildArtistUtilities(artistName)
     }
 }
 
-function buildArtistUtilities(){
+function buildArtistUtilities(name:string){
+    artistGreeting(name);
+    artistUpload(name)
+}
+
+//artist functions:
+function artistGreeting(name){
 
 }
 
+function artistUpload(name){
+    const uploadBtn = document.querySelector("#uploadBtn") as HTMLElement;
+    uploadBtn.style.display = "block";
+    uploadBtn.addEventListener("click", () => {
+        location.href = `../fileUploadingSystem/artistUpload.html?name=${name}`
+
+    })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//--------------
 async function getUserData(){
     const response = await fetch(`/API/users/get-User`);
         const user = await response.json();
