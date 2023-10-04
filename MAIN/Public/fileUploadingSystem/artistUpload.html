@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./dist/main.js" defer></script>
     <link rel="stylesheet" href="./dist/system.css">
+    <script src="./dist/artistUpload.js" defer></script>
     <!-- this link to font-awesome icons kit -->
     <script src="https://kit.fontawesome.com/761340618e.js" crossorigin="anonymous"></script>
     <!-- titleRoot class is to change the title of the page to match the username -->
@@ -26,6 +27,8 @@
             <input id="submit" type="submit" value="submit">
         </form>
     </div>
+    <button id="getSongs" onclick="handleGetSong()">Get songs</button>
+    <div id="rootSong"></div>
 
 
 
