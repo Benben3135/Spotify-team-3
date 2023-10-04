@@ -109,14 +109,33 @@ fetch("/get-songs")
   .then((response) => response.json())
   .then((data) => {
     console.log(data);
-    // Now, `data` contains the list of songs
-    // You can render the songs or perform other actions here
+    data.forEach((song) => {
+        renderSong(song.metadata)
+
+  })
   })
   .catch((error) => {
     console.error("Error fetching songs:", error);
   });
 
 
+
+
+
+function renderSong(song){
+    const artist = song.artist;
+    const name = song.name;
+    const img = song.img;
+    const reccomendedSongsBox = document.querySelector("#reccomended") as HTMLElement;
+    reccomendedSongsBox.innerHTML += 
+    `<div onclick="songPage(artist,name,img)" class="songsBox__song">
+        <img class="songsBox__song__img" src="${img}" alt="">
+        <div class="songsBox__song__name">${name}</div>
+        <div class="songsBox__song__artist">${artist}</div>
+    </div>`
+
+
+}
 
 
 

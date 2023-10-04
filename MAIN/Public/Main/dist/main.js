@@ -164,8 +164,17 @@ fetch("/get-songs")
     .then(function (response) { return response.json(); })
     .then(function (data) {
     console.log(data);
-    // Now, `data` contains the list of songs
-    // You can render the songs or perform other actions here
+    data.forEach(function (song) {
+        renderSong(song.metadata);
+    });
 })["catch"](function (error) {
     console.error("Error fetching songs:", error);
 });
+function renderSong(song) {
+    var artist = song.artist;
+    var name = song.name;
+    var img = song.img;
+    var reccomendedSongsBox = document.querySelector("#reccomended");
+    reccomendedSongsBox.innerHTML +=
+        "<div onclick=\"songPage(artist,name,img)\" class=\"songsBox__song\">\n        <img class=\"songsBox__song__img\" src=\"" + img + "\" alt=\"\">\n        <div class=\"songsBox__song__name\">" + name + "</div>\n        <div class=\"songsBox__song__artist\">" + artist + "</div>\n    </div>";
+}
