@@ -83,7 +83,7 @@ body::-webkit-scrollbar-thumb:hover {
   height: fit-content;
   background-color: rgba(125, 125, 228, 0.705);
   border-radius: 10px;
-  z-index: 3;
+  z-index: 20;
   padding: 20px;
   border: 2px solid;
   animation: colorfull 4s infinite alternate;

@@ -165,16 +165,21 @@ fetch("/get-songs")
     .then(function (data) {
     console.log(data);
     data.forEach(function (song) {
-        renderSong(song.metadata);
+        renderSong(song.metadata, song.filename);
     });
 })["catch"](function (error) {
     console.error("Error fetching songs:", error);
 });
-function renderSong(song) {
+function renderSong(song, filename) {
+    debugger;
     var artist = song.artist;
     var name = song.name;
     var img = song.img;
     var reccomendedSongsBox = document.querySelector("#reccomended");
     reccomendedSongsBox.innerHTML +=
-        "<div onclick=\"songPage(artist,name,img)\" class=\"songsBox__song\">\n        <img class=\"songsBox__song__img\" src=\"" + img + "\" alt=\"\">\n        <div class=\"songsBox__song__name\">" + name + "</div>\n        <div class=\"songsBox__song__artist\">" + artist + "</div>\n    </div>";
+        "<div onclick=\"songPage('" + artist + "','" + name + "','" + filename + "')\" class=\"songsBox__song\">\n        <img class=\"songsBox__song__img\" src=\"" + img + "\" alt=\"\">\n        <div class=\"songsBox__song__name\">" + name + "</div>\n        <div class=\"songsBox__song__artist\">" + artist + "</div>\n    </div>";
+}
+function songPage(artist, name, filename) {
+    debugger;
+    location.href = "../songPage/songPage.html?artist=" + artist + "&name=" + name + "&filename=" + filename;
 }

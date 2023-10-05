@@ -110,7 +110,7 @@ fetch("/get-songs")
   .then((data) => {
     console.log(data);
     data.forEach((song) => {
-        renderSong(song.metadata)
+        renderSong(song.metadata, song.filename)
 
   })
   })
@@ -122,19 +122,26 @@ fetch("/get-songs")
 
 
 
-function renderSong(song){
+function renderSong(song,filename){
+    debugger;
+
     const artist = song.artist;
     const name = song.name;
     const img = song.img;
     const reccomendedSongsBox = document.querySelector("#reccomended") as HTMLElement;
     reccomendedSongsBox.innerHTML += 
-    `<div onclick="songPage(artist,name,img)" class="songsBox__song">
+    `<div onclick="songPage('${artist}','${name}','${filename}')" class="songsBox__song">
         <img class="songsBox__song__img" src="${img}" alt="">
         <div class="songsBox__song__name">${name}</div>
         <div class="songsBox__song__artist">${artist}</div>
     </div>`
 
 
+}
+
+function songPage(artist,name,filename){
+    debugger;
+    location.href = `../songPage/songPage.html?artist=${artist}&name=${name}&filename=${filename}`
 }
 
 

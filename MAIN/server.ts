@@ -135,70 +135,26 @@ app.get("/get-songs", async (req, res) => {
   }
 });
 
-//ouer:
-app.get("/play", (req, res) => {
-  //const filename = req.params;
-  console.log('you in app.get')
-  gfs.files.find({ }, (err, file) => {
-    if (err || !file) {
-      return res.status(404).json({
-        err: "File not found",
-      });
-    }
 
-    // Check if the file is an MP3
-    if (file.contentType !== "audio/mpeg" && file.contentType !== "audio/mp3") {
-      return res.status(400).json({
-        err: "Not an MP3 file",
-      });
-    }
+//ouer:
+app.get("/play-song", async (req, res) => {
+  console.log("play-song started!")
+  const filename = req.query.filename;
+  console.log(filename)
+  
+  const file = await gfs.files.findOne({
+     filename: filename
+    })
+  console.log(file)
+  res.set({
+    "Content-Type": file.contentType,
+    "Content-Disposition": `attachment; filename="${file.filename}"`,
+  });
 
     // Stream the file to the client
-    const readstream = gfs.createReadStream(file.filename);
+    const readstream = gfs.createReadStream(file);
     readstream.pipe(res);
   });
-});
-
-//fron chatGTP:
-// app.get('/play', (req, res) => {
-//   console.log('you in app.get')
-//   gfs.files.find({}).toArray((err, files) => {
-//     if (err || !files || files.length === 0) {
-//       return res.status(404).sendFile(path.join(__dirname, 'error.html'));
-//     }
-
-//     const file = files[0];
-//     if (file.contentType !== 'audio/mpeg' && file.contentType !== 'audio/mp3') {
-//       return res.status(400).sendFile(path.join(__dirname, 'error.html'));
-//     }
-
-//     res.sendFile(path.join(__dirname, 'play.html'));
-//   });
-// });
-
-// app.get('/play', (req, res) => {
-//   console.log('you in app.get')
-//   try {
-//     gfs.files.find({}).toArray((err, files) => {
-//       if (err || !files || files.length === 0) {
-//         return res.status(404).send('<html><body><h1>Error: Files not found</h1></body></html>');
-//       }
-
-//       const file = files[0];
-//       if (file.contentType !== 'audio/mpeg' && file.contentType !== 'audio/mp3') {
-//         return res.status(400).send('<html><body><h1>Error: Not an MP3 file</h1></body></html>');
-//       }
-
-//       const htmlResponse = `<html><body><h1>Now Playing: ${file.filename}</h1></body></html>`;
-//       res.send(htmlResponse);
-//     });
-//   } catch (error) {
-//     console.error(error)
-//   }
-// });
-
-
-
 
 
 
