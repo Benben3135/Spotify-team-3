@@ -152,7 +152,7 @@ app.get("/play-song", async (req, res) => {
   });
 
     // Stream the file to the client
-    const readstream = gfs.createReadStream(file);
+    const readstream = gfs.createReadStream(file.filename);
     readstream.pipe(res);
   });
 

@@ -137,7 +137,7 @@ app.get("/play-song", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         "Content-Disposition": `attachment; filename="${file.filename}"`,
     });
     // Stream the file to the client
-    const readstream = gfs.createReadStream(file);
+    const readstream = gfs.createReadStream(file.filename);
     readstream.pipe(res);
 }));
 const userRouter_1 = __importDefault(require("./API/users/userRouter"));
