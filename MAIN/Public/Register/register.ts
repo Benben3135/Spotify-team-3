@@ -5,6 +5,7 @@ async function handleRegister(ev: any) {
     const email = ev.target.email.value;
     const password = ev.target.password.value;
     const artistName = ev.target.artistName.value;
+    //register an artist
     if (artistName) {
       const user = { name, email, password, artistName };
       if (!user.email || !user.password) throw new Error("missing some details");
@@ -26,6 +27,7 @@ async function handleRegister(ev: any) {
 
 
     }
+    //register for not an artist user
     else {
       const user = { name, email, password };
       if (!user.email || !user.password) throw new Error("missing some details");
