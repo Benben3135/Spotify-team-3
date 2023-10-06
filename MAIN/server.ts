@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import { GridFsStorage } from 'multer-gridfs-storage';
-
+import cors from 'cors';
 
 //streaming library for node.js
 const path = require("path");
@@ -26,6 +26,8 @@ app.use(methodOverride('_method'))
 //middlware for using parser
 app.use(cookieParser())
 
+// Use cors middleware
+app.use(cors());
 
 //static files
 app.use(express.static("Public"));

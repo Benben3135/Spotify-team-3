@@ -44,10 +44,10 @@ function handleSignIn(ev) {
                     ev.preventDefault();
                     email = ev.target.email.value;
                     password = ev.target.password.value;
-                    return [4 /*yield*/, fetch("API/users/login", {
+                    return [4 /*yield*/, fetch("http://localhost:3000/API/users/login", {
                             method: "POST",
                             headers: {
-                                "content-type": "application/json"
+                                "Content-Type": "application/json"
                             },
                             body: JSON.stringify({ email: email, password: password })
                         })];

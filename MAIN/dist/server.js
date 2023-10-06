@@ -16,6 +16,7 @@ const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const multer_gridfs_storage_1 = require("multer-gridfs-storage");
+const cors_1 = __importDefault(require("cors"));
 //streaming library for node.js
 const path = require("path");
 const crypto = require("crypto");
@@ -31,6 +32,8 @@ app.use(bodyParser.json());
 app.use(methodOverride('_method'));
 //middlware for using parser
 app.use(cookie_parser_1.default());
+// Use cors middleware
+app.use(cors_1.default());
 //static files
 app.use(express_1.default.static("Public"));
 //body

@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 function handleRegister(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var name, email, password, artistName, user, response, data, user, response, data;
+        var name, email, password, artistName, user, response, errorData, data, user, response, data;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -45,11 +45,11 @@ function handleRegister(ev) {
                     email = ev.target.email.value;
                     password = ev.target.password.value;
                     artistName = ev.target.artistName.value;
-                    if (!artistName) return [3 /*break*/, 3];
+                    if (!artistName) return [3 /*break*/, 5];
                     user = { name: name, email: email, password: password, artistName: artistName };
                     if (!user.email || !user.password)
                         throw new Error("missing some details");
-                    return [4 /*yield*/, fetch("http://localhost:3000/API/users/register ", {
+                    return [4 /*yield*/, fetch("http://localhost:3000/API/users/register", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json"
@@ -58,16 +58,22 @@ function handleRegister(ev) {
                         })];
                 case 1:
                     response = _a.sent();
+                    if (!!response.ok) return [3 /*break*/, 3];
                     return [4 /*yield*/, response.json()];
                 case 2:
+                    errorData = _a.sent();
+                    console.error("Registration error:", errorData.error);
+                    return [2 /*return*/];
+                case 3: return [4 /*yield*/, response.json()];
+                case 4:
                     data = _a.sent();
                     if (data.error) {
                         alert(data.error);
                         return [2 /*return*/];
                     }
                     window.location.href = "http://localhost:3000/index.html";
-                    return [3 /*break*/, 6];
-                case 3:
+                    return [3 /*break*/, 8];
+                case 5:
                     user = { name: name, email: email, password: password };
                     if (!user.email || !user.password)
                         throw new Error("missing some details");
@@ -78,14 +84,14 @@ function handleRegister(ev) {
                             },
                             body: JSON.stringify(user)
                         })];
-                case 4:
+                case 6:
                     response = _a.sent();
                     return [4 /*yield*/, response.json()];
-                case 5:
+                case 7:
                     data = _a.sent();
                     window.location.href = "http://localhost:3000/index.html";
-                    _a.label = 6;
-                case 6: return [2 /*return*/];
+                    _a.label = 8;
+                case 8: return [2 /*return*/];
             }
         });
     });

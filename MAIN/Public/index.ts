@@ -3,10 +3,10 @@ async function handleSignIn(ev:any){
         ev.preventDefault();
         const email = ev.target.email.value;
         const password = ev.target.password.value;
-        const response = await fetch("API/users/login", {
+        const response = await fetch("http://localhost:3000/API/users/login", {
             method: "POST",
             headers: {
-                "content-type": "application/json",
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({email,password}),
         });

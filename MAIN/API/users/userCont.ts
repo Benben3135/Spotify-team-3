@@ -39,7 +39,7 @@ export const login = async (req: any, res: any) => {
     res.cookie("user", token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 48 });
     res.send({ ok: true });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     res.status(401).send({ error: error.message });
   }
 }
@@ -55,10 +55,10 @@ export const register = async (req: any, res: any) => {
     if(!artistName){
       const user = new UserModelDB({ name ,email, password: hash });
     const userDB = await user.save();
-    console.log(userDB)
+    // console.log(userDB)
     res.send({ ok: true, userDB });}
 
-    if(artistName){
+    else{
       const userCheck = await UserModelDB.findOne({ artistName });
       if(userCheck){
         res.send({ error: "Artist name already exists" })

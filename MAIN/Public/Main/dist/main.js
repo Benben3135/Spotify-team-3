@@ -78,7 +78,7 @@ function isArtist() {
             switch (_a.label) {
                 case 0:
                     console.log("i started!");
-                    return [4 /*yield*/, fetch("http://localhost:3000/API/users/addArtistFunc")];
+                    return [4 /*yield*/, fetch("/API/users/addArtistFunc")];
                 case 1:
                     response = _a.sent();
                     return [4 /*yield*/, response.json()];
@@ -86,7 +86,7 @@ function isArtist() {
                     artistName = (_a.sent()).artistName;
                     console.log(artistName);
                     if (!artistName)
-                        console.log("no admin");
+                        throw new Error("no admin");
                     else {
                         buildArtistUtilities(artistName);
                     }
@@ -150,9 +150,9 @@ function docs() {
                     });
                     userData = document.querySelector(".docs__user");
                     if (admin)
-                        userData.innerHTML = "Username: " + name + " <br> Created at: " + createdAtString + " <br> OFFICIAL CREATOR";
+                        userData.innerHTML = "Username: '" + name + "' <br> Created at: '" + createdAtString + "' <br> OFFICIAL CREATOR";
                     else {
-                        userData.innerHTML = "Username: " + name + " <br> Created at: " + createdAt + " ";
+                        userData.innerHTML = "Username: '" + name + "' <br> Created at: '" + createdAt + "' ";
                     }
                     return [2 /*return*/];
             }

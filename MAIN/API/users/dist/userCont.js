@@ -80,7 +80,7 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                 return [3 /*break*/, 4];
             case 3:
                 error_1 = _b.sent();
-                console.error(error_1);
+                // console.error(error);
                 res.status(401).send({ error: error_1.message });
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
@@ -104,12 +104,10 @@ exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0
                 return [4 /*yield*/, user.save()];
             case 2:
                 userDB = _b.sent();
-                console.log(userDB);
+                // console.log(userDB)
                 res.send({ ok: true, userDB: userDB });
-                _b.label = 3;
-            case 3:
-                if (!artistName) return [3 /*break*/, 6];
-                return [4 /*yield*/, userModel_1.UserModelDB.findOne({ artistName: artistName })];
+                return [3 /*break*/, 6];
+            case 3: return [4 /*yield*/, userModel_1.UserModelDB.findOne({ artistName: artistName })];
             case 4:
                 userCheck = _b.sent();
                 if (userCheck) {

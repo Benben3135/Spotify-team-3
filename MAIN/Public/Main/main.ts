@@ -29,10 +29,10 @@ function manageTitle() {
 isArtist();
 async function isArtist(){
     console.log("i started!")
-    const response = await fetch("http://localhost:3000/API/users/addArtistFunc");
+    const response = await fetch("/API/users/addArtistFunc");
     const {artistName} = await response.json();
     console.log(artistName);
-    if(!artistName) console.log("no admin")
+    if(!artistName) throw new Error("no admin")
     else{
     buildArtistUtilities(artistName)
     }
@@ -97,9 +97,9 @@ async function docs(){
     })
 
     const userData = document.querySelector(".docs__user") as HTMLElement;
-    if(admin) userData.innerHTML = `Username: ${name} <br> Created at: ${createdAtString} <br> OFFICIAL CREATOR`
+    if(admin) userData.innerHTML = `Username: '${name}' <br> Created at: '${createdAtString}' <br> OFFICIAL CREATOR`
     else{
-        userData.innerHTML = `Username: ${name} <br> Created at: ${createdAt} `
+        userData.innerHTML = `Username: '${name}' <br> Created at: '${createdAt}' `
 
     }
 }
