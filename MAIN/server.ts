@@ -3,92 +3,45 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import { GridFsStorage } from 'multer-gridfs-storage';
 
-
-//streaming library for node.js
 const path = require("path");
 const crypto = require("crypto");
 const multer = require("multer");
-const Grid = require("gridfs-stream");
 const bodyParser = require("body-parser");
 const methodOverride = require('method-override')
+const cors = require('cors');
 
 
 
-//npm i dotenv
 import 'dotenv/config'
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(methodOverride('_method'))
-
-
-//middlware for using parser
 app.use(cookieParser())
-
-
-//static files
 app.use(express.static("Public"));
-
-//body
 app.use(express.json());
-
+app.use(cors());
 
 const { MONGO_URI } = process.env;
-//connect to mongoDB with mongoose
-mongoose.connect(MONGO_URI).then(() => {
-  console.info("MongoDB connected")
-})
 
-  .catch(err => {
-    console.error(err)
-  })
-
-  const {SECRET} = process.env;
-  const secret = SECRET;
-  const jwt = require('jwt-simple');
-  
-  function getArtistName(req, res) {
-    try {
-        //take from cookie and decode cookie and check for admin role
-        const token = req.cookies.user;
-        if(!token) throw new Error("no token");
-        const cookie = jwt.decode(token, secret);
-        //decoded cookie
-        const {artistName} = cookie;
-        req.artistName =  artistName;
-      
-    } catch (error) {
-        res.status(401).send({ error: error.message });
-    }
-}
-  
- 
-//setting the songs DB:
+mongoose.connect(MONGO_URI)
+  .then(() => console.info("MongoDB connected"))
+  .catch(err => console.error(err));
 
 const { SONGS_MONGO_URI } = process.env;
 const conn = mongoose.createConnection(SONGS_MONGO_URI);
 
-let gfs;
-conn.once('open', () => {
-  //init stream
-  gfs = Grid(conn.db, mongoose.mongo);
-  gfs.collection('uploads');
-});
-//check if DB connected
 conn.on('connected', () => {
   console.log("songs file system (gridFS) connected successfully");
 });
-conn.on('error', (error) => {
-  console.error('MongoDB Connection Error:', error);
-});
 
-//create storage engine
 const storage = new GridFsStorage({
   url: SONGS_MONGO_URI,
-  file: (req: any, file: any) => {
+  options: { useNewUrlParser: true, useUnifiedTopology: true },
+  file: (req, file) => {
     return new Promise((resolve, reject) => {
-      crypto.randomBytes(16, (err: any, buf: any) => {
+      crypto.randomBytes(16, (err, buf) => {
         if (err) {
           return reject(err);
         }
@@ -102,72 +55,103 @@ const storage = new GridFsStorage({
             img: req.body.img,
             // Add more parameters as needed
           },
-          bucketName: "uploads",
+          bucketName: 'uploads',
+          
         };
-        console.log("new file created")
         resolve(fileInfo);
       });
     });
-  },
+  }
 });
-
-//gfs.createWriteStream(file.filename, fileInfo.name)
 
 const upload = multer({ storage });
 
-
-app.post("/upload", upload.single("file"), (req: any, res: any) => {
-  if (!req.file) {
-    return res.status(400).send("No file uploaded.");
-  }
-  const fileInfo = req.file; // The fileInfo is available in req.file
-  console.log(fileInfo);
-  res.redirect("/Main/main.html") //אולי עדיף להישאר בדף העלאה ולצאת משם באמצעות לחצן?
+app.post("/upload", upload.single('file'), (req, res) => {
+  res.json({ file: req.file });
 });
 
 app.get("/get-songs", async (req, res) => {
+  const filesCollection = conn.db.collection('uploads.files');
   try {
-    const songs = await gfs.files.find().toArray();
-    res.json(songs);
+    const songs = await filesCollection.find({}).toArray();
+    if (!songs.length) {
+      return res.status(404).json({ error: 'No songs found' });
+    }
+    return res.json(songs);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
+app.get("/files", async (req, res) => {
+  try {
+      const filesCollection = conn.db.collection('uploads.files');
+      const files = await filesCollection.find({}).toArray();
+      
+      if (!files || files.length === 0) {
+          return res.status(404).json({
+              error: "No files exist"
+          });
+      }
+      
+      return res.json(files);
+  } catch (err) {
+      console.error("Error retrieving files:", err);
+      return res.status(500).json({ error: "Internal server error" });
+  }
+});
 
-//ouer:
 app.get("/play-song", async (req, res) => {
-  console.log("play-song started!")
   const filename = req.query.filename;
-  console.log(filename)
+
+  // First, get the file metadata
+  const filesCollection = conn.db.collection('uploads.files');
+  const file = await filesCollection.findOne({ filename });
+
+  if (!file) {
+    return res.status(404).json({ error: "No file found" });
+  }
+
+  // Then, stream the actual file chunks
+  const chunksCollection = conn.db.collection('uploads.chunks');
+  const downloadStream = chunksCollection.find({ files_id: file._id }).sort({ n: 1 }).stream();
+  res.setHeader('Content-Type', file.contentType);
+  res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
+
+
+
+
+
+
+  downloadStream.on('data', (chunk) => {
+    if (chunk.data) {
+      const bufferData = Buffer.from(chunk.data, 'base64');  // Convert the base64 string to a Buffer
+      res.write(bufferData);
+    } else {
+      console.error('Unexpected chunk content:', JSON.stringify(chunk, null, 2));
+    }
+  });
   
-  const file = await gfs.files.findOne({
-     filename: filename
-    })
-  console.log(file)
-  res.set({
-    "Content-Type": file.contentType,
-    "Content-Disposition": `attachment; filename="${file.filename}"`,
+
+  downloadStream.on('error', (err) => {
+    console.error('Error streaming file:', err);
+    res.sendStatus(500);
   });
 
-    // Stream the file to the client
-    const readstream = gfs.createReadStream(file.filename);
-    readstream.pipe(res);
+  downloadStream.on('end', () => {
+    res.end();
   });
 
+});
 
 
 
 
 
-
-import userRouter from "./API/users/userRouter";
-app.use("/API/users", userRouter);
-
-
-
+import userRouter from './API/users/userRouter';
+app.use('/API/users', userRouter);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Server started on port ${port}`);
 });

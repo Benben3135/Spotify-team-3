@@ -1,6 +1,31 @@
 async function handleRegister(ev: any) {
 
     ev.preventDefault();
+    debugger;
+
+    const name = ev.target.name.value;
+    const email = ev.target.email.value;
+    const password = ev.target.password.value;
+    
+      const user = { name, email, password };
+      if (!user.email || !user.password) throw new Error("missing some details");
+      const response = await fetch("http://localhost:3000/API/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(user),
+      });
+      const data = await response.json();
+ 
+      window.location.href = `http://localhost:3000/index.html`;
+    }
+
+  async function handleRegisterArtist(ev: any) {
+
+    ev.preventDefault();
+    debugger;
+
     const name = ev.target.name.value;
     const email = ev.target.email.value;
     const password = ev.target.password.value;
@@ -9,7 +34,7 @@ async function handleRegister(ev: any) {
     if (artistName) {
       const user = { name, email, password, artistName };
       if (!user.email || !user.password) throw new Error("missing some details");
-      const response = await fetch("http://localhost:3000/API/users/register ", {
+      const response = await fetch("http://localhost:3000/API/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,7 +56,7 @@ async function handleRegister(ev: any) {
     else {
       const user = { name, email, password };
       if (!user.email || !user.password) throw new Error("missing some details");
-      const response = await fetch("http://localhost:3000/API/users/register ", {
+      const response = await fetch("http://localhost:3000/API/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -45,7 +70,6 @@ async function handleRegister(ev: any) {
 
 
   }
-
 
 
 

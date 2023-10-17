@@ -16,70 +16,33 @@ const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const multer_gridfs_storage_1 = require("multer-gridfs-storage");
-//streaming library for node.js
 const path = require("path");
 const crypto = require("crypto");
 const multer = require("multer");
-const Grid = require("gridfs-stream");
 const bodyParser = require("body-parser");
 const methodOverride = require('method-override');
-//npm i dotenv
+const cors = require('cors');
 require("dotenv/config");
 const app = express_1.default();
 const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(methodOverride('_method'));
-//middlware for using parser
 app.use(cookie_parser_1.default());
-//static files
 app.use(express_1.default.static("Public"));
-//body
 app.use(express_1.default.json());
+app.use(cors());
 const { MONGO_URI } = process.env;
-//connect to mongoDB with mongoose
-mongoose_1.default.connect(MONGO_URI).then(() => {
-    console.info("MongoDB connected");
-})
-    .catch(err => {
-    console.error(err);
-});
-const { SECRET } = process.env;
-const secret = SECRET;
-const jwt = require('jwt-simple');
-function getArtistName(req, res) {
-    try {
-        //take from cookie and decode cookie and check for admin role
-        const token = req.cookies.user;
-        if (!token)
-            throw new Error("no token");
-        const cookie = jwt.decode(token, secret);
-        //decoded cookie
-        const { artistName } = cookie;
-        req.artistName = artistName;
-    }
-    catch (error) {
-        res.status(401).send({ error: error.message });
-    }
-}
-//setting the songs DB:
+mongoose_1.default.connect(MONGO_URI)
+    .then(() => console.info("MongoDB connected"))
+    .catch(err => console.error(err));
 const { SONGS_MONGO_URI } = process.env;
 const conn = mongoose_1.default.createConnection(SONGS_MONGO_URI);
-let gfs;
-conn.once('open', () => {
-    //init stream
-    gfs = Grid(conn.db, mongoose_1.default.mongo);
-    gfs.collection('uploads');
-});
-//check if DB connected
 conn.on('connected', () => {
     console.log("songs file system (gridFS) connected successfully");
 });
-conn.on('error', (error) => {
-    console.error('MongoDB Connection Error:', error);
-});
-//create storage engine
 const storage = new multer_gridfs_storage_1.GridFsStorage({
     url: SONGS_MONGO_URI,
+    options: { useNewUrlParser: true, useUnifiedTopology: true },
     file: (req, file) => {
         return new Promise((resolve, reject) => {
             crypto.randomBytes(16, (err, buf) => {
@@ -95,53 +58,79 @@ const storage = new multer_gridfs_storage_1.GridFsStorage({
                         genre: req.body.genre,
                         img: req.body.img,
                     },
-                    bucketName: "uploads",
+                    bucketName: 'uploads',
                 };
-                console.log("new file created");
                 resolve(fileInfo);
             });
         });
-    },
-});
-//gfs.createWriteStream(file.filename, fileInfo.name)
-const upload = multer({ storage });
-app.post("/upload", upload.single("file"), (req, res) => {
-    if (!req.file) {
-        return res.status(400).send("No file uploaded.");
     }
-    const fileInfo = req.file; // The fileInfo is available in req.file
-    console.log(fileInfo);
-    res.redirect("/Main/main.html"); //אולי עדיף להישאר בדף העלאה ולצאת משם באמצעות לחצן?
+});
+const upload = multer({ storage });
+app.post("/upload", upload.single('file'), (req, res) => {
+    res.json({ file: req.file });
 });
 app.get("/get-songs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filesCollection = conn.db.collection('uploads.files');
     try {
-        const songs = yield gfs.files.find().toArray();
-        res.json(songs);
+        const songs = yield filesCollection.find({}).toArray();
+        if (!songs.length) {
+            return res.status(404).json({ error: 'No songs found' });
+        }
+        return res.json(songs);
     }
     catch (err) {
         console.error(err);
         res.status(500).json({ error: "Internal server error" });
     }
 }));
-//ouer:
+app.get("/files", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const filesCollection = conn.db.collection('uploads.files');
+        const files = yield filesCollection.find({}).toArray();
+        if (!files || files.length === 0) {
+            return res.status(404).json({
+                error: "No files exist"
+            });
+        }
+        return res.json(files);
+    }
+    catch (err) {
+        console.error("Error retrieving files:", err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}));
 app.get("/play-song", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log("play-song started!");
     const filename = req.query.filename;
-    console.log(filename);
-    const file = yield gfs.files.findOne({
-        filename: filename
+    // First, get the file metadata
+    const filesCollection = conn.db.collection('uploads.files');
+    const file = yield filesCollection.findOne({ filename });
+    if (!file) {
+        return res.status(404).json({ error: "No file found" });
+    }
+    // Then, stream the actual file chunks
+    const chunksCollection = conn.db.collection('uploads.chunks');
+    const downloadStream = chunksCollection.find({ files_id: file._id }).sort({ n: 1 }).stream();
+    res.setHeader('Content-Type', file.contentType);
+    res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
+    downloadStream.on('data', (chunk) => {
+        if (chunk.data) {
+            const bufferData = Buffer.from(chunk.data, 'base64'); // Convert the base64 string to a Buffer
+            res.write(bufferData);
+        }
+        else {
+            console.error('Unexpected chunk content:', JSON.stringify(chunk, null, 2));
+        }
     });
-    console.log(file);
-    res.set({
-        "Content-Type": file.contentType,
-        "Content-Disposition": `attachment; filename="${file.filename}"`,
+    downloadStream.on('error', (err) => {
+        console.error('Error streaming file:', err);
+        res.sendStatus(500);
     });
-    // Stream the file to the client
-    const readstream = gfs.createReadStream(file.filename);
-    readstream.pipe(res);
+    downloadStream.on('end', () => {
+        res.end();
+    });
 }));
 const userRouter_1 = __importDefault(require("./API/users/userRouter"));
-app.use("/API/users", userRouter_1.default);
+app.use('/API/users', userRouter_1.default);
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+    console.log(`Server started on port ${port}`);
 });
