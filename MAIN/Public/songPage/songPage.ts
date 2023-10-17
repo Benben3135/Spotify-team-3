@@ -37,9 +37,10 @@ function renderSongPage(song) {
   const songPage = document.querySelector(".songPage") as HTMLElement;
   songPage.innerHTML +=
     `<div class="song">
+            <img class="song__bigimg" src="${img}" alt="">
             <img class="song__img" src="${img}" alt="">
             <div class="song__name">${name}</div>
-            <div class="song__artist">${artist}</div>
+            <div class="song__artist" onclick="artistPage('${artist}')">${artist}</div>
         </div>`
 
   const songPage__song = document.querySelector(".songPage__song") as HTMLElement;
@@ -74,5 +75,7 @@ function playSong() {
   }
 }
 
-
+function artistPage(artist){
+  window.location.href = `../Artist_Page/artistPage.html?artist=${artist}`
+}
 

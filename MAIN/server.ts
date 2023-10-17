@@ -67,7 +67,7 @@ const storage = new GridFsStorage({
 const upload = multer({ storage });
 
 app.post("/upload", upload.single('file'), (req, res) => {
-  res.json({ file: req.file });
+  res.json({ success: true, message: 'File uploaded successfully' });
 });
 
 app.get("/get-songs", async (req, res) => {
@@ -126,8 +126,7 @@ app.get("/play-song", async (req, res) => {
 
   downloadStream.on('data', (chunk) => {
     if (chunk.data) {
-      const bufferData = Buffer.from(chunk.data, 'base64');  // Convert the base64 string to a Buffer
-      res.write(bufferData);
+      res.write(chunk.data.buffer);
     } else {
       console.error('Unexpected chunk content:', JSON.stringify(chunk, null, 2));
     }
@@ -145,7 +144,23 @@ app.get("/play-song", async (req, res) => {
 
 });
 
-
+app.get("/get-artist-songs", async (req, res) => {
+  const filesCollection = conn.db.collection('uploads.files');
+  try {
+    const artist = req.query.artist;
+    const query = {
+      "metadata.artist": artist
+    };
+    const songs = await filesCollection.find(query).toArray();
+    if (!songs.length) {
+      return res.status(404).json({ error: 'No songs found' });
+    }
+    return res.json(songs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 
 

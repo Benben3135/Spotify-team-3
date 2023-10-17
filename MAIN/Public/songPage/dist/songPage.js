@@ -30,7 +30,7 @@ function renderSongPage(song) {
     var img = song.img;
     var songPage = document.querySelector(".songPage");
     songPage.innerHTML +=
-        "<div class=\"song\">\n            <img class=\"song__img\" src=\"" + img + "\" alt=\"\">\n            <div class=\"song__name\">" + name + "</div>\n            <div class=\"song__artist\">" + artist + "</div>\n        </div>";
+        "<div class=\"song\">\n            <img class=\"song__bigimg\" src=\"" + img + "\" alt=\"\">\n            <img class=\"song__img\" src=\"" + img + "\" alt=\"\">\n            <div class=\"song__name\">" + name + "</div>\n            <div class=\"song__artist\" onclick=\"artistPage('" + artist + "')\">" + artist + "</div>\n        </div>";
     var songPage__song = document.querySelector(".songPage__song");
 }
 playSong();
@@ -54,4 +54,7 @@ function playSong() {
     catch (error) {
         console.error("Error playing song:", error);
     }
+}
+function artistPage(artist) {
+    window.location.href = "../Artist_Page/artistPage.html?artist=" + artist;
 }

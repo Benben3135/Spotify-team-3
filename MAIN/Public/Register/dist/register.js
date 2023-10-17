@@ -68,7 +68,7 @@ function handleRegister(ev) {
 }
 function handleRegisterArtist(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var name, email, password, artistName, user, response, data, user, response, data;
+        var name, email, password, artistName, artistImg, user, response, data, user, response, data;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -78,6 +78,7 @@ function handleRegisterArtist(ev) {
                     email = ev.target.email.value;
                     password = ev.target.password.value;
                     artistName = ev.target.artistName.value;
+                    artistImg = ev.target.artistImg.value;
                     if (!artistName) return [3 /*break*/, 3];
                     user = { name: name, email: email, password: password, artistName: artistName };
                     if (!user.email || !user.password)

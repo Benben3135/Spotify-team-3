@@ -67,7 +67,7 @@ const storage = new multer_gridfs_storage_1.GridFsStorage({
 });
 const upload = multer({ storage });
 app.post("/upload", upload.single('file'), (req, res) => {
-    res.json({ file: req.file });
+    res.json({ success: true, message: 'File uploaded successfully' });
 });
 app.get("/get-songs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const filesCollection = conn.db.collection('uploads.files');
@@ -114,8 +114,7 @@ app.get("/play-song", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
     downloadStream.on('data', (chunk) => {
         if (chunk.data) {
-            const bufferData = Buffer.from(chunk.data, 'base64'); // Convert the base64 string to a Buffer
-            res.write(bufferData);
+            res.write(chunk.data.buffer);
         }
         else {
             console.error('Unexpected chunk content:', JSON.stringify(chunk, null, 2));
@@ -128,6 +127,24 @@ app.get("/play-song", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     downloadStream.on('end', () => {
         res.end();
     });
+}));
+app.get("/get-artist-songs", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filesCollection = conn.db.collection('uploads.files');
+    try {
+        const artist = req.query.artist;
+        const query = {
+            "metadata.artist": artist
+        };
+        const songs = yield filesCollection.find(query).toArray();
+        if (!songs.length) {
+            return res.status(404).json({ error: 'No songs found' });
+        }
+        return res.json(songs);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
+    }
 }));
 const userRouter_1 = __importDefault(require("./API/users/userRouter"));
 app.use('/API/users', userRouter_1.default);

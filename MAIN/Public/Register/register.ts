@@ -30,6 +30,7 @@ async function handleRegister(ev: any) {
     const email = ev.target.email.value;
     const password = ev.target.password.value;
     const artistName = ev.target.artistName.value;
+    const artistImg = ev.target.artistImg.value;
     //register an artist
     if (artistName) {
       const user = { name, email, password, artistName };

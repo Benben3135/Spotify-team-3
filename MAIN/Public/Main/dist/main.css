@@ -210,18 +210,27 @@ body::-webkit-scrollbar-thumb:hover {
 }
 
 #reccomended {
-  background-color: rgba(62, 168, 255, 0.705);
+  background-color: rgba(170, 206, 235, 0.71);
 }
 
 #genre {
-  background-color: rgba(81, 240, 128, 0.705);
+  background-color: rgba(89, 131, 101, 0.71);
 }
 
 #liked {
-  background-color: rgba(235, 73, 62, 0.705);
+  background-color: rgba(213, 130, 125, 0.71);
 }
 
 #backVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+#backVideo #backVideo {
   position: fixed;
   top: 0;
   left: 0;

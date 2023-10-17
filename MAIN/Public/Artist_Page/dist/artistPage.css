@@ -1,0 +1,69 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#backVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+#backVideo #backVideo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.name {
+  font-size: 50px;
+  font-weight: bold;
+  color: white;
+  margin-top: 10%;
+  margin-left: 10%;
+}
+
+.songs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10%;
+}
+.songs__song {
+  display: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10%;
+}
+.songs__song__name {
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
+  margin-left: 10%;
+}
+.songs__song_-artist {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+  margin-left: 10%;
+}
+.songs__song__img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-left: 10%;
+}
