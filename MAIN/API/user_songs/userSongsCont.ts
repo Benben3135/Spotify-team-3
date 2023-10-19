@@ -16,13 +16,14 @@ export const likedSongs = async (req: any, res: any) => {
         const data = req.body;
         const artist = data.artist;
         const name = data.name;
-        const url = `http://localhost:3000/get-song?artist=${artist}&name=${name}`;
+        const url = `http://localhost:3000/get-song_forLiked?artist=${artist}&name=${name}`;
 
-        axios.get(url)
+        await axios.get(url)
             .then(response => {
-                // Handle the response here
+                
                 const [data] = response.data;
                 const fileName = data.filename;
+                console.log("filename in axios" , fileName)
                 joinCollectionLikedSong(fileName, req , res)
 
             })
@@ -88,13 +89,16 @@ export const likedCheck = async (req: any, res: any) => {
         if(!token) throw new Error("no token");
         const cookie = jwt.decode(token, secret);
         const {email} = cookie;
+        console.log("this is the email and filename" , email , filename)
         const response = await LikedSongsDB.findOne({email:email , fileName:filename})
-        if(response){
-            res.send(true)
+        console.log(response);
+       
+        if(response!=null){
+            res.json({ isLiked: true })
         }
         else{
-            res.send(false)
-        }
+            res.json({ isLiked: false })
+                }
 
 
     } catch (error) {

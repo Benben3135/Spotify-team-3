@@ -84,11 +84,13 @@ function artistPage(artist) {
 async function liked(artist, name) {
   debugger;
   const check = await checkIfLiked()
-  if (check) {
+  console.log("liked func get this" , check)
+  if (check.true) {
     await deleteLike()
+    console.log("unliked!")
   }
   else {
-    console.log("unliked!")
+    console.log("song didnt marked as liked")
     debugger;
     const dataSend = {
       artist: artist,
@@ -113,15 +115,9 @@ async function liked(artist, name) {
 async function checkIfLiked() {
   const filename = getfilenameFromQuery();
   const response = await fetch(`http://localhost:3000/API/user_songs/likedCheck?filename=${filename}`);
-  console.log(response);
-  if (response.ok) {
+  debugger;
     const isLiked = await response.json();
     return isLiked;
-  } else {
-    console.error("Failed to check if liked");
-    return false;
-
-  }
 }
 
 

@@ -167,6 +167,7 @@ app.get("/get-song", async (req, res) => {
   try {
     const artist = req.query.artist;
     const name = req.query.name;
+    console.log(artist,name)
 
     const query = {
       "metadata.artist": artist,
@@ -183,6 +184,26 @@ app.get("/get-song", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+// app.get("/get-song_forLiked", async (req, res) => {
+//   const filesCollection = conn.db.collection('uploads.files');
+//   try {
+//     const artist = req.query.artist;
+//     const name = req.query.name;
+//     console.log(artist,name)
+
+//     const query = {
+//       "metadata.artist": artist,
+//       "metadata.name": name
+//     };
+//     const song = await filesCollection.findOne(query);
+   
+//     return res.json(song);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
 
 app.get("/get-song-by-filename", async (req, res) => {
   const filesCollection = conn.db.collection('uploads.files');

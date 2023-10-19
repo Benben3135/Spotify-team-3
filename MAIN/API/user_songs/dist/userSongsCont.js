@@ -45,29 +45,35 @@ var secret = SECRET;
 var saltRounds = 10;
 var axios = require('axios');
 exports.likedSongs = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var data, artist, name, url;
+    var data, artist, name, url, error_1;
     return __generator(this, function (_a) {
-        try {
-            data = req.body;
-            artist = data.artist;
-            name = data.name;
-            url = "http://localhost:3000/get-song?artist=" + artist + "&name=" + name;
-            axios.get(url)
-                .then(function (response) {
-                // Handle the response here
-                var data = response.data[0];
-                var fileName = data.filename;
-                joinCollectionLikedSong(fileName, req, res);
-            })["catch"](function (error) {
-                // Handle any errors
-                console.error(error);
-            });
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                data = req.body;
+                artist = data.artist;
+                name = data.name;
+                url = "http://localhost:3000/get-song_forLiked?artist=" + artist + "&name=" + name;
+                return [4 /*yield*/, axios.get(url)
+                        .then(function (response) {
+                        var data = response.data[0];
+                        var fileName = data.filename;
+                        console.log("filename in axios", fileName);
+                        joinCollectionLikedSong(fileName, req, res);
+                    })["catch"](function (error) {
+                        // Handle any errors
+                        console.error(error);
+                    })];
+            case 1:
+                _a.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                console.error(error_1);
+                res.send({ error: error_1.message });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
-        catch (error) {
-            console.error(error);
-            res.send({ error: error.message });
-        }
-        return [2 /*return*/];
     });
 }); };
 function getEmailFromCoockie(req, res) {
@@ -91,7 +97,7 @@ function getEmailFromCoockie(req, res) {
 }
 function joinCollectionLikedSong(song, req, res) {
     return __awaiter(this, void 0, void 0, function () {
-        var email, error_1;
+        var email, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -102,9 +108,9 @@ function joinCollectionLikedSong(song, req, res) {
                     createJoinCollection(song, email);
                     return [3 /*break*/, 3];
                 case 2:
-                    error_1 = _a.sent();
-                    console.error(error_1);
-                    res.status(401).send({ error: error_1.message });
+                    error_2 = _a.sent();
+                    console.error(error_2);
+                    res.status(401).send({ error: error_2.message });
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -113,7 +119,7 @@ function joinCollectionLikedSong(song, req, res) {
 }
 function createJoinCollection(fileName, email) {
     return __awaiter(this, void 0, void 0, function () {
-        var likedSong, savedSong, error_2;
+        var likedSong, savedSong, error_3;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -124,8 +130,8 @@ function createJoinCollection(fileName, email) {
                     savedSong = _a.sent();
                     return [3 /*break*/, 3];
                 case 2:
-                    error_2 = _a.sent();
-                    console.error(error_2);
+                    error_3 = _a.sent();
+                    console.error(error_3);
                     return [3 /*break*/, 3];
                 case 3: return [2 /*return*/];
             }
@@ -133,7 +139,7 @@ function createJoinCollection(fileName, email) {
     });
 }
 exports.likedCheck = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var filename, token, cookie, email, response, error_3;
+    var filename, token, cookie, email, response, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -144,27 +150,29 @@ exports.likedCheck = function (req, res) { return __awaiter(void 0, void 0, void
                     throw new Error("no token");
                 cookie = jwt.decode(token, secret);
                 email = cookie.email;
+                console.log("this is the email and filename", email, filename);
                 return [4 /*yield*/, userSongsModel_1.LikedSongsDB.findOne({ email: email, fileName: filename })];
             case 1:
                 response = _a.sent();
-                if (response) {
-                    res.send(true);
+                console.log(response);
+                if (response != null) {
+                    res.json({ isLiked: true });
                 }
                 else {
-                    res.send(false);
+                    res.json({ isLiked: false });
                 }
                 return [3 /*break*/, 3];
             case 2:
-                error_3 = _a.sent();
-                console.error(error_3);
-                res.send({ error: error_3.message });
+                error_4 = _a.sent();
+                console.error(error_4);
+                res.send({ error: error_4.message });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.DeletelikedSongs = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var filename, token, cookie, email, error_4;
+    var filename, token, cookie, email, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -182,16 +190,16 @@ exports.DeletelikedSongs = function (req, res) { return __awaiter(void 0, void 0
                 res.json({ success: true });
                 return [3 /*break*/, 3];
             case 2:
-                error_4 = _a.sent();
-                console.error(error_4);
-                res.send({ error: error_4.message });
+                error_5 = _a.sent();
+                console.error(error_5);
+                res.send({ error: error_5.message });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });
 }); };
 exports.getLikedsongs = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var token, cookie, email, likedSongs_1, error_5;
+    var token, cookie, email, likedSongs_1, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -207,9 +215,9 @@ exports.getLikedsongs = function (req, res) { return __awaiter(void 0, void 0, v
                 res.json(likedSongs_1);
                 return [3 /*break*/, 3];
             case 2:
-                error_5 = _a.sent();
-                console.error(error_5);
-                res.send({ error: error_5.message });
+                error_6 = _a.sent();
+                console.error(error_6);
+                res.send({ error: error_6.message });
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }

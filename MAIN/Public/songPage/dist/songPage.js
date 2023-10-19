@@ -104,13 +104,15 @@ function liked(artist, name) {
                     return [4 /*yield*/, checkIfLiked()];
                 case 1:
                     check = _a.sent();
-                    if (!check) return [3 /*break*/, 3];
+                    console.log("liked func get this", check);
+                    if (!check["true"]) return [3 /*break*/, 3];
                     return [4 /*yield*/, deleteLike()];
                 case 2:
                     _a.sent();
+                    console.log("unliked!");
                     return [3 /*break*/, 6];
                 case 3:
-                    console.log("unliked!");
+                    console.log("song didnt marked as liked");
                     debugger;
                     dataSend = {
                         artist: artist,
@@ -144,15 +146,11 @@ function checkIfLiked() {
                     return [4 /*yield*/, fetch("http://localhost:3000/API/user_songs/likedCheck?filename=" + filename)];
                 case 1:
                     response = _a.sent();
-                    console.log(response);
-                    if (!response.ok) return [3 /*break*/, 3];
+                    debugger;
                     return [4 /*yield*/, response.json()];
                 case 2:
                     isLiked = _a.sent();
                     return [2 /*return*/, isLiked];
-                case 3:
-                    console.error("Failed to check if liked");
-                    return [2 /*return*/, false];
             }
         });
     });
