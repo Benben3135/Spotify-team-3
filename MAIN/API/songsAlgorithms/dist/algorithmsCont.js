@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.addStamina = exports.getGeneres = exports.addGenereLiked = void 0;
+exports.getStaminas = exports.addStamina = exports.getGeneres = exports.addGenereLiked = void 0;
 var algorithmsModel_1 = require("./algorithmsModel");
 var staminaModel_1 = require("./staminaModel");
 var axios = require('axios');
@@ -158,7 +158,7 @@ exports.getGeneres = function (req, res) { return __awaiter(void 0, void 0, void
 }); };
 //stamina functions:
 exports.addStamina = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var email, filename, url, response, data, songMeta, artist, check, newStaminaDB, error_3;
+    var email, filename, url, response, data, songMeta, artistName, check, newStaminaDB, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -173,9 +173,9 @@ exports.addStamina = function (req, res) { return __awaiter(void 0, void 0, void
                 response = _a.sent();
                 data = response.data;
                 songMeta = data.metadata;
-                artist = songMeta.artist;
-                console.log(email, artist);
-                return [4 /*yield*/, staminaModel_1.ArtistStaminaModelDB.findOne({ email: email, artist: artist })];
+                artistName = songMeta.artist;
+                console.log(email, artistName);
+                return [4 /*yield*/, staminaModel_1.ArtistStaminaModelDB.findOne({ email: email, artistName: artistName })];
             case 3:
                 check = _a.sent();
                 if (!check) return [3 /*break*/, 4];
@@ -183,7 +183,7 @@ exports.addStamina = function (req, res) { return __awaiter(void 0, void 0, void
                 check.save();
                 return [3 /*break*/, 6];
             case 4:
-                newStaminaDB = new staminaModel_1.ArtistStaminaModelDB({ email: email, artist: artist, stamina: 1 });
+                newStaminaDB = new staminaModel_1.ArtistStaminaModelDB({ email: email, artistName: artistName, stamina: 1 });
                 return [4 /*yield*/, newStaminaDB.save()];
             case 5:
                 _a.sent();
@@ -197,6 +197,26 @@ exports.addStamina = function (req, res) { return __awaiter(void 0, void 0, void
                 res.send({ error: error_3.message });
                 return [3 /*break*/, 8];
             case 8: return [2 /*return*/];
+        }
+    });
+}); };
+exports.getStaminas = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var staminas, error_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, staminaModel_1.ArtistStaminaModelDB.find()];
+            case 1:
+                staminas = _a.sent();
+                res.send(staminas);
+                return [3 /*break*/, 3];
+            case 2:
+                error_4 = _a.sent();
+                console.error(error_4);
+                res.send({ error: error_4.message });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); };

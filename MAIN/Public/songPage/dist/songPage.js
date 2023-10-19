@@ -99,7 +99,9 @@ function liked(artist, name) {
         var check, dataSend, response, data;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, checkIfLiked()];
+                case 0:
+                    debugger;
+                    return [4 /*yield*/, checkIfLiked()];
                 case 1:
                     check = _a.sent();
                     if (!check) return [3 /*break*/, 3];
@@ -185,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 function checkIfLikedTurnRed() {
     return __awaiter(this, void 0, void 0, function () {
-        var filename, response, isLiked, heart, heart;
+        var filename, response, isLiked, heart;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -201,10 +203,6 @@ function checkIfLikedTurnRed() {
                     if (isLiked) {
                         heart = document.querySelector(".heart__icon");
                         heart.style.color = "red";
-                    }
-                    else {
-                        heart = document.querySelector(".heart__icon");
-                        console.error("Failed to check if liked");
                     }
                     return [2 /*return*/];
             }

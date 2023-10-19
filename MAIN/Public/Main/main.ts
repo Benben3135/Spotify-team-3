@@ -30,7 +30,7 @@ isArtist();
 async function isArtist() {
     const response = await fetch("http://localhost:3000/API/users/addArtistFunc");
     const { artistName } = await response.json();
-    if (!artistName) cc("no admin")
+    if (!artistName)("no admin")
     else {
         buildArtistUtilities(artistName)
     }
@@ -103,21 +103,6 @@ async function docs() {
 }
 
 //getting the songs from the server:
-fetch("/get-songs")
-    .then((response) => response.json())
-    .then((data) => {
-        data.forEach((song) => {
-            renderSong(song.metadata, song.filename)
-
-        })
-    })
-    .catch((error) => {
-        console.error("Error fetching songs:", error);
-    });
-
-
-
-
 
 function renderSong(song, filename) {
     debugger;
@@ -214,6 +199,7 @@ async function addGenreAlgorithm(filename) {
 getGeneres();
 async function getGeneres() {
     const response = await fetch("http://localhost:3000/API/songsAlgorithms/getGeneres");
+
     const dataFromServer = await response.json();
     delete dataFromServer.email;
     delete dataFromServer._id;
@@ -229,9 +215,9 @@ async function getGeneres() {
 
 }
 
-async function rendertopGenre(topGenre){
+async function rendertopGenre(topGenre) {
     const response = await fetch(`/get-topGenre?topGenre=${topGenre}`)
-    const topGenreSongs:Song[] = await response.json()
+    const topGenreSongs: Song[] = await response.json()
     const numberOfSongsToSelect = Math.min(3, topGenreSongs.length);
 
     const selectedSongs: Song[] = [];
@@ -248,9 +234,9 @@ async function rendertopGenre(topGenre){
 
 }
 
-async function renderSecondGenre(secondtopGenre){
+async function renderSecondGenre(secondtopGenre) {
     const response = await fetch(`/get-topGenre?topGenre=${secondtopGenre}`)
-    const topGenreSongs:Song[] = await response.json()
+    const topGenreSongs: Song[] = await response.json()
     const numberOfSongsToSelect = Math.min(2, topGenreSongs.length);
 
     const selectedSongs: Song[] = [];
@@ -267,9 +253,9 @@ async function renderSecondGenre(secondtopGenre){
 
 }
 
-async function renderThirddGenre(thirdtopGenre){
+async function renderThirddGenre(thirdtopGenre) {
     const response = await fetch(`/get-topGenre?topGenre=${thirdtopGenre}`)
-    const topGenreSongs:Song[] = await response.json()
+    const topGenreSongs: Song[] = await response.json()
     const numberOfSongsToSelect = Math.min(1, topGenreSongs.length);
 
     const selectedSongs: Song[] = [];
@@ -286,10 +272,10 @@ async function renderThirddGenre(thirdtopGenre){
 
 }
 
-async function renderSelectedSongs(selectedSongs:Song[]){
-selectedSongs.forEach(song => {
-    renderGenreSongs(song.metadata, song.filename)
-})
+async function renderSelectedSongs(selectedSongs: Song[]) {
+    selectedSongs.forEach(song => {
+        renderGenreSongs(song.metadata, song.filename)
+    })
 }
 
 function renderGenreSongs(song, filename) {
@@ -327,4 +313,42 @@ async function addStamina(filename) {
         // You may want to do something if data.ok is false
         console.error("Server responded with an error:", data.error);
     }
+}
+
+
+getStaminas();
+async function getStaminas() {
+    const response = await fetch("http://localhost:3000/API/songsAlgorithms/getStaminas");
+
+    const dataFromServer = await response.json();
+    let staminasArr = []
+    dataFromServer.forEach(song => {
+        debugger;
+        delete song.email;
+        delete song.__v;
+        delete song._id;
+        staminasArr.push(song)
+    })
+    console.log(staminasArr)
+   const sortedArr =  staminasArr.sort((a, b) => b.stamina - a.stamina);
+   const length = sortedArr.length;
+   for(let i=0 ; i<length; i++){
+    getArtistSongs(sortedArr[i])
+   }
+}
+
+async function getArtistSongs(song){
+const artist = song.artistName;
+const response = await fetch(`http://localhost:3000/get-artist-songs?artist=${artist}`)
+const data = await response.json()
+const length = data.length
+function getRandomInt(x: number): number {
+    return Math.floor(Math.random() * (x + 1));
+}
+debugger;
+const randomNumber = getRandomInt(length);
+const songToRender = data[randomNumber]
+console.log(songToRender)
+
+renderSong(songToRender.metadata, songToRender.filename)
 }

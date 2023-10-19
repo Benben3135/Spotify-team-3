@@ -82,6 +82,7 @@ function artistPage(artist) {
 
 
 async function liked(artist, name) {
+  debugger;
   const check = await checkIfLiked()
   if (check) {
     await deleteLike()
@@ -156,8 +157,5 @@ async function checkIfLikedTurnRed() {
       const heart = document.querySelector(".heart__icon") as HTMLDivElement;
       heart.style.color = "red";
     }
-   else {
-    const heart = document.querySelector(".heart__icon") as HTMLDivElement;
-    console.error("Failed to check if liked");
-  }
+   
 }

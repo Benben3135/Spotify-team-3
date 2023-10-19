@@ -114,18 +114,30 @@ export const addStamina = async (req: any, res: any) => {
           const response = await axios.get(url);
           const data = response.data;
           const songMeta = data.metadata;
-          const artist = songMeta.artist;
-          console.log(email, artist)
-          const check = await ArtistStaminaModelDB.findOne({email,artist})
+          const artistName = songMeta.artist;
+          console.log(email, artistName)
+          const check = await ArtistStaminaModelDB.findOne({email,artistName})
           if(check){
             check.stamina += 1
             check.save();
           }
           else{
-            const newStaminaDB = new ArtistStaminaModelDB({ email, artist, stamina: 1 });
+            const newStaminaDB = new ArtistStaminaModelDB({ email, artistName, stamina: 1 });
             await newStaminaDB.save();
           }
           res.send({ message: "Stamina updated successfully!" });
+
+    } catch (error) {
+        console.error(error);
+        res.send({ error: error.message });
+    }
+}
+
+export const getStaminas = async (req: any, res: any) => {
+    try {
+        const staminas = await ArtistStaminaModelDB.find();
+        res.send(staminas);
+         
 
     } catch (error) {
         console.error(error);

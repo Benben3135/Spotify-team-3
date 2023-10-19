@@ -83,7 +83,7 @@ function isArtist() {
                 case 2:
                     artistName = (_a.sent()).artistName;
                     if (!artistName)
-                        cc("no admin");
+                        ("no admin");
                     else {
                         buildArtistUtilities(artistName);
                     }
@@ -157,15 +157,6 @@ function docs() {
     });
 }
 //getting the songs from the server:
-fetch("/get-songs")
-    .then(function (response) { return response.json(); })
-    .then(function (data) {
-    data.forEach(function (song) {
-        renderSong(song.metadata, song.filename);
-    });
-})["catch"](function (error) {
-    console.error("Error fetching songs:", error);
-});
 function renderSong(song, filename) {
     debugger;
     var artist = song.artist;
@@ -427,6 +418,64 @@ function addStamina(filename) {
                         // You may want to do something if data.ok is false
                         console.error("Server responded with an error:", data.error);
                     }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+getStaminas();
+function getStaminas() {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, dataFromServer, staminasArr, sortedArr, length, i;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch("http://localhost:3000/API/songsAlgorithms/getStaminas")];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    dataFromServer = _a.sent();
+                    staminasArr = [];
+                    dataFromServer.forEach(function (song) {
+                        debugger;
+                        delete song.email;
+                        delete song.__v;
+                        delete song._id;
+                        staminasArr.push(song);
+                    });
+                    console.log(staminasArr);
+                    sortedArr = staminasArr.sort(function (a, b) { return b.stamina - a.stamina; });
+                    length = sortedArr.length;
+                    for (i = 0; i < length; i++) {
+                        getArtistSongs(sortedArr[i]);
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function getArtistSongs(song) {
+    return __awaiter(this, void 0, void 0, function () {
+        function getRandomInt(x) {
+            return Math.floor(Math.random() * (x + 1));
+        }
+        var artist, response, data, length, randomNumber, songToRender;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    artist = song.artistName;
+                    return [4 /*yield*/, fetch("http://localhost:3000/get-artist-songs?artist=" + artist)];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    length = data.length;
+                    debugger;
+                    randomNumber = getRandomInt(length);
+                    songToRender = data[randomNumber];
+                    console.log(songToRender);
+                    renderSong(songToRender.metadata, songToRender.filename);
                     return [2 /*return*/];
             }
         });
