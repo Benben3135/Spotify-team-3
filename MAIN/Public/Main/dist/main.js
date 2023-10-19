@@ -76,17 +76,14 @@ function isArtist() {
         var response, artistName;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    console.log("i started!");
-                    return [4 /*yield*/, fetch("http://localhost:3000/API/users/addArtistFunc")];
+                case 0: return [4 /*yield*/, fetch("http://localhost:3000/API/users/addArtistFunc")];
                 case 1:
                     response = _a.sent();
                     return [4 /*yield*/, response.json()];
                 case 2:
                     artistName = (_a.sent()).artistName;
-                    console.log(artistName);
                     if (!artistName)
-                        console.log("no admin");
+                        cc("no admin");
                     else {
                         buildArtistUtilities(artistName);
                     }
@@ -163,7 +160,6 @@ function docs() {
 fetch("/get-songs")
     .then(function (response) { return response.json(); })
     .then(function (data) {
-    console.log(data);
     data.forEach(function (song) {
         renderSong(song.metadata, song.filename);
     });
@@ -179,7 +175,260 @@ function renderSong(song, filename) {
     reccomendedSongsBox.innerHTML +=
         "<div onclick=\"songPage('" + artist + "','" + name + "','" + filename + "')\" class=\"songsBox__song\">\n        <img class=\"songsBox__song__img\" src=\"" + img + "\" alt=\"\">\n        <div class=\"songsBox__song__name\">" + name + "</div>\n        <div class=\"songsBox__song__artist\">" + artist + "</div>\n    </div>";
 }
+// getting the liked songs from the server
+fetch("http://localhost:3000/API/user_songs/get-Liked-songs")
+    .then(function (response) { return response.json(); })
+    .then(function (data) {
+    data.forEach(function (song) {
+        var fileName = song.fileName;
+        getSongByFilename(fileName);
+    });
+})["catch"](function (error) {
+    console.error("Error fetching songs:", error);
+});
+function getSongByFilename(filename) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, data, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, fetch("/get-song-by-filename?filename=" + filename)];
+                case 1:
+                    response = _a.sent();
+                    // Check if response is not successful
+                    if (!response.ok) {
+                        throw new Error("HTTP error! Status: " + response.status);
+                    }
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    renderLikedSongs(data.metadata, data.filename);
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _a.sent();
+                    console.error("Error fetching songs:", error_1);
+                    return [2 /*return*/, null]; // Or throw the error again depending on your error handling strategy
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+function renderLikedSongs(song, filename) {
+    var artist = song.artist;
+    var name = song.name;
+    var img = song.img;
+    var reccomendedSongsBox = document.querySelector("#liked");
+    reccomendedSongsBox.innerHTML +=
+        "<div onclick=\"songPage('" + artist + "','" + name + "','" + filename + "')\" class=\"songsBox__song\">\n        <img class=\"songsBox__song__img\" src=\"" + img + "\" alt=\"\">\n        <div class=\"songsBox__song__name\">" + name + "</div>\n        <div class=\"songsBox__song__artist\">" + artist + "</div>\n    </div>";
+}
 function songPage(artist, name, filename) {
-    debugger;
-    location.href = "../songPage/songPage.html?artist=" + artist + "&name=" + name + "&filename=" + filename;
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    debugger;
+                    return [4 /*yield*/, addGenreAlgorithm(filename)];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, addStamina(filename)];
+                case 2:
+                    _a.sent();
+                    window.location.href = "../songPage/songPage.html?artist=" + artist + "&name=" + name + "&filename=" + filename;
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function addGenreAlgorithm(filename) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, data;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    debugger;
+                    return [4 /*yield*/, fetch("http://localhost:3000/API/songsAlgorithms/addGenereLiked", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ filename: filename })
+                        })];
+                case 1:
+                    response = _a.sent();
+                    // Handle non-200 HTTP response status
+                    if (!response.ok) {
+                        throw new Error("HTTP error! Status: " + response.status);
+                    }
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    if (!data.ok) {
+                        // You may want to do something if data.ok is false
+                        console.error("Server responded with an error:", data.error);
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+//generate the favourite genres:
+getGeneres();
+function getGeneres() {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, dataFromServer, sortedGenres, topGenre, secondtopGenre, thirdtopGenre;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch("http://localhost:3000/API/songsAlgorithms/getGeneres")];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    dataFromServer = _a.sent();
+                    delete dataFromServer.email;
+                    delete dataFromServer._id;
+                    delete dataFromServer.__v;
+                    sortedGenres = Object.entries(dataFromServer).sort(function (a, b) { return b[1] - a[1]; });
+                    topGenre = sortedGenres[0][0];
+                    secondtopGenre = sortedGenres[1][0];
+                    thirdtopGenre = sortedGenres[2][0];
+                    rendertopGenre(topGenre);
+                    renderSecondGenre(secondtopGenre);
+                    renderThirddGenre(thirdtopGenre);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function rendertopGenre(topGenre) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, topGenreSongs, numberOfSongsToSelect, selectedSongs, indicesSelected, randomIndex;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch("/get-topGenre?topGenre=" + topGenre)];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    topGenreSongs = _a.sent();
+                    numberOfSongsToSelect = Math.min(3, topGenreSongs.length);
+                    selectedSongs = [];
+                    indicesSelected = new Set();
+                    while (indicesSelected.size < numberOfSongsToSelect) {
+                        randomIndex = Math.floor(Math.random() * topGenreSongs.length);
+                        if (!indicesSelected.has(randomIndex)) {
+                            indicesSelected.add(randomIndex);
+                            selectedSongs.push(topGenreSongs[randomIndex]);
+                        }
+                    }
+                    renderSelectedSongs(selectedSongs);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function renderSecondGenre(secondtopGenre) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, topGenreSongs, numberOfSongsToSelect, selectedSongs, indicesSelected, randomIndex;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch("/get-topGenre?topGenre=" + secondtopGenre)];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    topGenreSongs = _a.sent();
+                    numberOfSongsToSelect = Math.min(2, topGenreSongs.length);
+                    selectedSongs = [];
+                    indicesSelected = new Set();
+                    while (indicesSelected.size < numberOfSongsToSelect) {
+                        randomIndex = Math.floor(Math.random() * topGenreSongs.length);
+                        if (!indicesSelected.has(randomIndex)) {
+                            indicesSelected.add(randomIndex);
+                            selectedSongs.push(topGenreSongs[randomIndex]);
+                        }
+                    }
+                    renderSelectedSongs(selectedSongs);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function renderThirddGenre(thirdtopGenre) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, topGenreSongs, numberOfSongsToSelect, selectedSongs, indicesSelected, randomIndex;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fetch("/get-topGenre?topGenre=" + thirdtopGenre)];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    topGenreSongs = _a.sent();
+                    numberOfSongsToSelect = Math.min(1, topGenreSongs.length);
+                    selectedSongs = [];
+                    indicesSelected = new Set();
+                    while (indicesSelected.size < numberOfSongsToSelect) {
+                        randomIndex = Math.floor(Math.random() * topGenreSongs.length);
+                        if (!indicesSelected.has(randomIndex)) {
+                            indicesSelected.add(randomIndex);
+                            selectedSongs.push(topGenreSongs[randomIndex]);
+                        }
+                    }
+                    renderSelectedSongs(selectedSongs);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function renderSelectedSongs(selectedSongs) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            selectedSongs.forEach(function (song) {
+                renderGenreSongs(song.metadata, song.filename);
+            });
+            return [2 /*return*/];
+        });
+    });
+}
+function renderGenreSongs(song, filename) {
+    var artist = song.artist;
+    var name = song.name;
+    var img = song.img;
+    var reccomendedSongsBox = document.querySelector("#genre");
+    reccomendedSongsBox.innerHTML +=
+        "<div onclick=\"songPage('" + artist + "','" + name + "','" + filename + "')\" class=\"songsBox__song\">\n        <img class=\"songsBox__song__img\" src=\"" + img + "\" alt=\"\">\n        <div class=\"songsBox__song__name\">" + name + "</div>\n        <div class=\"songsBox__song__artist\">" + artist + "</div>\n    </div>";
+}
+//stamina:
+function addStamina(filename) {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, data;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    debugger;
+                    return [4 /*yield*/, fetch("http://localhost:3000/API/songsAlgorithms/addStamina", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({ filename: filename })
+                        })];
+                case 1:
+                    response = _a.sent();
+                    // Handle non-200 HTTP response status
+                    if (!response.ok) {
+                        throw new Error("HTTP error! Status: " + response.status);
+                    }
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    if (!data.ok) {
+                        // You may want to do something if data.ok is false
+                        console.error("Server responded with an error:", data.error);
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    });
 }

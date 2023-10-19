@@ -1,29 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="./dist/register.js" defer></script>
-    <link rel="stylesheet" href="../dist/index.css">
+    <link rel="stylesheet" href="../dist/artistStyle.css">
     <title>REGISTER</title>
 </head>
+
 <body>
-    <div class="signIn">
-        <form onsubmit="handleRegisterArtist(event)">
-            <img id="logo" src="../Files_To_Use/melodica__1_-removebg-preview.png" alt="">
-            <label for="name">name</label>
-            <input type="text" name="name" id="name" placeholder="name">
-            <label for="email">email</label>
-            <input type="text" name="email" id="email" placeholder="email">
-            <label for="password">password</label>
-            <input type="password" name="password" id="password" placeholder="password">
-            <label for="artistName">artistName</label>
-            <input type="text" name="artistName" id="artistName">
-            <label for="artistImg">artist Image</label>
-            <input type="url" name="artistImg" id="artistImg" >
-            <input type="submit" value="submit" id="submit">
-            <img src="../Files_To_Use/" alt="">
-        </form>
+    <div class="wrapper">
+        
+        <div class="signIn">
+            <form onsubmit="handleRegisterArtist(event)">
+                <img id="logo" src="../Files_To_Use/melodica__1_-removebg-preview.png" alt="">
+                <label for="name">name</label>
+                <input type="text" name="name" id="name" placeholder="name">
+                <label for="email">email</label>
+                <input type="text" name="email" id="email" placeholder="email">
+                <label for="password">password</label>
+                <input type="password" name="password" id="password" placeholder="password">
+                <label for="age">Artist Birthday</label>
+                <input type="date" name="age" id="age" placeholder="age">
+                <label for="artistName">Artist Official Name</label>
+                <input type="text" name="artistName" id="artistName" onchange="handleUpdateNameCard(event)">
+                <label for="artistImg">artist Image</label>
+                <input type="url" name="artistImg" id="artistImg" onchange="handleUpdateImgCard(event)">
+                <label for="artistInfo">Artist Info</label>
+                <input type="text" name="artistInfo" id="artistInfo" onchange="handleUpdateInfoCard(event)">
+                <input type="submit" value="submit" id="submit">
+                <img src="../Files_To_Use/" alt="">
+            </form>
+        </div>
+        <div class="artist">
+            <div class="artist__imgCard"></div>
+            <h1 class="artist__nameCard"></h1>
+            <p class="artist__infoCard"></p>
+
+        </div>
     </div>
 </body>
+
 </html>

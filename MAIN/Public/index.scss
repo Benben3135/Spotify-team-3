@@ -86,6 +86,7 @@ input{
     background-color: rgb(113, 122, 122);
     color: aliceblue;
     transition: all 0.2s ease-in-out;
+    border-radius: 10px;
     &:hover{
         transform: scale(1.05);
         cursor: cell;

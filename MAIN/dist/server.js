@@ -146,8 +146,73 @@ app.get("/get-artist-songs", (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.status(500).json({ error: "Internal server error" });
     }
 }));
+app.get("/get-song", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filesCollection = conn.db.collection('uploads.files');
+    try {
+        const artist = req.query.artist;
+        const name = req.query.name;
+        const query = {
+            "metadata.artist": artist,
+            "metadata.name": name
+        };
+        const songs = yield filesCollection.find(query).toArray();
+        if (!songs.length) {
+            return res.status(404).json({ error: 'No songs found' });
+        }
+        return res.json(songs);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}));
+app.get("/get-song-by-filename", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filesCollection = conn.db.collection('uploads.files');
+    try {
+        const { filename } = req.query;
+        console.log("i got this filename:", filename);
+        // Validate filename
+        if (!filename || typeof filename !== 'string') {
+            return res.status(400).json({ error: "Valid filename is required" });
+        }
+        const query = {
+            "filename": filename
+        };
+        const song = yield filesCollection.findOne(query);
+        if (!song) {
+            return res.status(404).json({ error: "Song not found" });
+        }
+        res.json(song);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}));
+app.get("/get-topGenre", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filesCollection = conn.db.collection('uploads.files');
+    try {
+        const { topGenre } = req.query;
+        const query = {
+            "metadata.genre": topGenre
+        };
+        const songs = yield filesCollection.find(query).toArray();
+        if (!songs.length) {
+            return res.status(404).json({ error: 'No songs found' });
+        }
+        return res.json(songs);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}));
 const userRouter_1 = __importDefault(require("./API/users/userRouter"));
 app.use('/API/users', userRouter_1.default);
+const userSongsRouter_1 = __importDefault(require("./API/user_songs/userSongsRouter"));
+app.use('/API/user_songs', userSongsRouter_1.default);
+const algorithmsRouter_1 = __importDefault(require("./API/songsAlgorithms/algorithmsRouter"));
+app.use('/API/songsAlgorithms', algorithmsRouter_1.default);
 app.listen(port, () => {
     console.log(`Server started on port ${port}`);
 });

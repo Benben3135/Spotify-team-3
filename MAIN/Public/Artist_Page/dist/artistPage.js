@@ -39,11 +39,36 @@ function getNameArtistFromQuery() {
     var urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('artist');
 }
-renderArtistName();
-function renderArtistName() {
-    var artist = getNameArtistFromQuery();
-    var nameRoot = document.querySelector(".name");
-    nameRoot.innerHTML += "" + artist;
+getArtistData();
+function getArtistData() {
+    return __awaiter(this, void 0, void 0, function () {
+        var artistName, response, data;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    artistName = getNameArtistFromQuery();
+                    return [4 /*yield*/, fetch("http://localhost:3000/API/users/get-artist-data?artist=" + artistName)];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    renderArtistData(data.artistData);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+function renderArtistData(artist) {
+    var artistImg = artist.artistImg;
+    var artistInfo = artist.artistInfo;
+    var artistName = artist.artistName;
+    var artistImgRoot = document.querySelector(".artistWrapper__artistImg");
+    var artistInfoRoot = document.querySelector(".artistWrapper__info");
+    var artistNameRoot = document.querySelector(".artistWrapper__name");
+    artistImgRoot.innerHTML = "<img class=\"artistWrapper__artistImg__img\" src=\"" + artistImg + "\" alt=\"\">";
+    artistInfoRoot.innerHTML = artistInfo;
+    artistNameRoot.innerHTML = artistName;
 }
 function getArtistSongs() {
     return __awaiter(this, void 0, void 0, function () {
@@ -75,15 +100,23 @@ function renderArtistSongs() {
                 case 1:
                     artistSongs = _a.sent();
                     artistSongs.forEach(function (song) {
-                        renderSong(song.metadata);
+                        renderSong(song.metadata, song);
                     });
                     return [2 /*return*/];
             }
         });
     });
 }
-function renderSong(song) {
+function renderSong(song, songFull) {
+    console.log(songFull);
+    var name = song.name;
+    var artist = song.artist;
+    var filename = songFull.filename;
     var songsDiv = document.querySelector(".songs");
-    var html = "<div song>\n    <div class=\"song__name\">" + song.name + "</div>\n    <div class=\"song__artist\">" + song.artist + "</div>\n    <img class=\"song__img\" src=\"" + song.img + "\" alt=\"\">\n    </div>";
+    var html = "<div class=\"songs__song\" onclick=\"songPage('" + artist + "','" + name + "','" + filename + "')\">\n        <img class=\"songs__song__img\" src=\"" + song.img + "\" alt=\"\">\n        <div class=\"songs__song__name\">" + song.name + "</div>\n        <div class=\"songs__song__artist\">" + song.artist + "</div>\n    </div>";
     songsDiv.innerHTML += html;
+}
+function songPage(artist, name, filename) {
+    debugger;
+    location.href = "../songPage/songPage.html?artist=" + artist + "&name=" + name + "&filename=" + filename;
 }

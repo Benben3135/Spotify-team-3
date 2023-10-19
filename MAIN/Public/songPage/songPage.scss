@@ -84,6 +84,18 @@ audio::-webkit-media-controls-panel {
     background: linear-gradient(90deg, rgba(73, 140, 205, 1) 26%, rgba(55, 157, 74, 1) 80%);
 }
 
+.heart__icon{
+
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    color: #ffffff;
+    z-index: 10;
+
+    &:hover{
+        transform: scale(1.2);
+        color: red;
+    }
+}
 
 #backVideo {
     position: fixed;

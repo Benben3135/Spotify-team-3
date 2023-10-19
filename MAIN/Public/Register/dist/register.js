@@ -34,6 +34,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+function handleUpdateNameCard(ev) {
+    debugger;
+    var name = ev.target.value;
+    var artistName = document.querySelector(".artist__nameCard");
+    artistName.innerHTML = name;
+}
+function handleUpdateImgCard(ev) {
+    debugger;
+    var img = ev.target.value;
+    var artistImg = document.querySelector(".artist__imgCard");
+    artistImg.innerHTML = "<img class=\"artist__imgCard__img\" src=\"" + img + "\" alt=\"\">";
+}
+function handleUpdateInfoCard(ev) {
+    debugger;
+    var info = ev.target.value;
+    console.log(info);
+    var artistInfo = document.querySelector(".artist__infoCard");
+    artistInfo.innerHTML = info;
+}
 function handleRegister(ev) {
     return __awaiter(this, void 0, void 0, function () {
         var name, email, password, user, response, data;
@@ -68,7 +87,7 @@ function handleRegister(ev) {
 }
 function handleRegisterArtist(ev) {
     return __awaiter(this, void 0, void 0, function () {
-        var name, email, password, artistName, artistImg, user, response, data, user, response, data;
+        var name, email, password, birthday, age, artistName, artistImg, artistInfo, user, response, data, user, response, data;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -77,10 +96,13 @@ function handleRegisterArtist(ev) {
                     name = ev.target.name.value;
                     email = ev.target.email.value;
                     password = ev.target.password.value;
+                    birthday = ev.target.age.value;
+                    age = calculateAge(birthday);
                     artistName = ev.target.artistName.value;
                     artistImg = ev.target.artistImg.value;
+                    artistInfo = ev.target.artistInfo.value;
                     if (!artistName) return [3 /*break*/, 3];
-                    user = { name: name, email: email, password: password, artistName: artistName };
+                    user = { name: name, email: email, password: password, age: age, artistName: artistName, artistImg: artistImg, artistInfo: artistInfo };
                     if (!user.email || !user.password)
                         throw new Error("missing some details");
                     return [4 /*yield*/, fetch("http://localhost:3000/API/users/register", {
@@ -123,4 +145,13 @@ function handleRegisterArtist(ev) {
             }
         });
     });
+}
+function calculateAge(birthday) {
+    // Parse the input birthday string into a Date object
+    var birthdayDate = new Date(birthday);
+    // Get the current date
+    var currentDate = new Date();
+    // Calculate the age by subtracting the birth year from the current year
+    var age = currentDate.getFullYear() - birthdayDate.getFullYear();
+    return age;
 }

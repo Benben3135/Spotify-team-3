@@ -27,12 +27,15 @@ exports.UserSchema = new mongoose_1.Schema({
         type: Boolean,
         "default": false
     },
+    age: Number,
     artistName: {
         required: false,
         type: String,
         unique: true,
         immutable: true
     },
+    artistImg: String,
+    artistInfo: String,
     createdAt: {
         type: Date,
         immutable: true,

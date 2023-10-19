@@ -162,10 +162,88 @@ app.get("/get-artist-songs", async (req, res) => {
   }
 });
 
+app.get("/get-song", async (req, res) => {
+  const filesCollection = conn.db.collection('uploads.files');
+  try {
+    const artist = req.query.artist;
+    const name = req.query.name;
+
+    const query = {
+      "metadata.artist": artist,
+      "metadata.name": name
+
+    };
+    const songs = await filesCollection.find(query).toArray();
+    if (!songs.length) {
+      return res.status(404).json({ error: 'No songs found' });
+    }
+    return res.json(songs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/get-song-by-filename", async (req, res) => {
+  const filesCollection = conn.db.collection('uploads.files');
+
+  try {
+    const { filename } = req.query;
+    console.log("i got this filename:" , filename)
+
+    // Validate filename
+    if (!filename || typeof filename !== 'string') {
+      return res.status(400).json({ error: "Valid filename is required" });
+    }
+
+    const query = {
+      "filename": filename
+    }
+
+    const song = await filesCollection.findOne(query);
+
+
+    if (!song) {
+      return res.status(404).json({ error: "Song not found" });
+    }
+
+    res.json(song);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get("/get-topGenre", async (req, res) => {
+  const filesCollection = conn.db.collection('uploads.files');
+  try {
+    const {topGenre} = req.query;
+    const query = {
+      "metadata.genre": topGenre
+    };
+    const songs = await filesCollection.find(query).toArray();
+    if (!songs.length) {
+      return res.status(404).json({ error: 'No songs found' });
+    }
+    return res.json(songs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 
 import userRouter from './API/users/userRouter';
 app.use('/API/users', userRouter);
+
+import userSongsRouter from './API/user_songs/userSongsRouter';
+app.use('/API/user_songs', userSongsRouter);
+
+import algorithmsRouter from './API/songsAlgorithms/algorithmsRouter';
+app.use('/API/songsAlgorithms', algorithmsRouter);
+
 
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);

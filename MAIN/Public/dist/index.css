@@ -59,6 +59,7 @@ input {
   background-color: #717a7a;
   color: aliceblue;
   transition: all 0.2s ease-in-out;
+  border-radius: 10px;
 }
 input:hover {
   transform: scale(1.05);

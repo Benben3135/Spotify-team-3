@@ -34,7 +34,6 @@ export const login = async (req: any, res: any) => {
     }
     
     const token = jwt.encode(cookie, secret);
-    console.log(token)
 
     res.cookie("user", token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 48 });
     res.send({ ok: true });
@@ -47,7 +46,7 @@ export const login = async (req: any, res: any) => {
 
 export const register = async (req: any, res: any) => {
   try {
-    const { name, email, password, artistName } = req.body;
+    const { name, email, password, age, artistName, artistImg, artistInfo } = req.body;
 
     if (!email || !password) throw new Error("Please complete all fields");
 
@@ -55,7 +54,6 @@ export const register = async (req: any, res: any) => {
     if(!artistName){
       const user = new UserModelDB({ name ,email, password: hash });
     const userDB = await user.save();
-    console.log(userDB)
     res.send({ ok: true, userDB });}
 
     if(artistName){
@@ -63,9 +61,8 @@ export const register = async (req: any, res: any) => {
       if(userCheck){
         res.send({ error: "Artist name already exists" })
       }
-      const user = new UserModelDB({ name ,email, password: hash,admin:true, artistName});
+      const user = new UserModelDB({ name ,email, password: hash,admin:true, age, artistName, artistImg, artistInfo});
     const userDB = await user.save();
-    console.log(userDB)
    
     res.send({ ok: true, userDB });}
 
@@ -83,9 +80,7 @@ export const getUser = async (req: any, res: any) => {
     const cookie = jwt.decode(token, secret);
     //decoded cookie
     const {email} = cookie;
-    console.log(email)
     const userDB = await UserModelDB.findOne({email});
-    console.log(userDB)
  
     res.send(userDB);
   } catch (error) {
@@ -97,10 +92,21 @@ export const getUser = async (req: any, res: any) => {
 
 export const addArtistFunc = async (req: any, res: any) => {
   try {
-    console.log("addArtistFunc started")
     const artistName = req.artistName;
-    console.log(artistName)
     res.send({artistName})
+  } catch (error) {
+    console.error(error);
+    res.send({ error: error.message });
+  }
+}
+
+
+export const getArtistData = async (req: any, res: any) => {
+  try {
+    const artistName = req.query.artist;
+    const artistData = await UserModelDB.findOne({artistName});
+    console.log(artistData)
+    res.send({artistData});
   } catch (error) {
     console.error(error);
     res.send({ error: error.message });

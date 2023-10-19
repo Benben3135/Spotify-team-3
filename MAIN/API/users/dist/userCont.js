@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.addArtistFunc = exports.getUser = exports.register = exports.login = void 0;
+exports.getArtistData = exports.addArtistFunc = exports.getUser = exports.register = exports.login = void 0;
 var userModel_1 = require("./userModel");
 var bcrypt = require('bcrypt');
 var jwt = require('jwt-simple');
@@ -74,7 +74,6 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
                     artistName: userDB.artistName
                 };
                 token = jwt.encode(cookie, secret);
-                console.log(token);
                 res.cookie("user", token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 48 });
                 res.send({ ok: true });
                 return [3 /*break*/, 4];
@@ -88,12 +87,12 @@ exports.login = function (req, res) { return __awaiter(void 0, void 0, void 0, f
     });
 }); };
 exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, name, email, password, artistName, hash, user, userDB, userCheck, user, userDB, error_2;
+    var _a, name, email, password, age, artistName, artistImg, artistInfo, hash, user, userDB, userCheck, user, userDB, error_2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 _b.trys.push([0, 7, , 8]);
-                _a = req.body, name = _a.name, email = _a.email, password = _a.password, artistName = _a.artistName;
+                _a = req.body, name = _a.name, email = _a.email, password = _a.password, age = _a.age, artistName = _a.artistName, artistImg = _a.artistImg, artistInfo = _a.artistInfo;
                 if (!email || !password)
                     throw new Error("Please complete all fields");
                 return [4 /*yield*/, bcrypt.hash(password, saltRounds)];
@@ -104,7 +103,6 @@ exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0
                 return [4 /*yield*/, user.save()];
             case 2:
                 userDB = _b.sent();
-                console.log(userDB);
                 res.send({ ok: true, userDB: userDB });
                 _b.label = 3;
             case 3:
@@ -115,11 +113,10 @@ exports.register = function (req, res) { return __awaiter(void 0, void 0, void 0
                 if (userCheck) {
                     res.send({ error: "Artist name already exists" });
                 }
-                user = new userModel_1.UserModelDB({ name: name, email: email, password: hash, admin: true, artistName: artistName });
+                user = new userModel_1.UserModelDB({ name: name, email: email, password: hash, admin: true, age: age, artistName: artistName, artistImg: artistImg, artistInfo: artistInfo });
                 return [4 /*yield*/, user.save()];
             case 5:
                 userDB = _b.sent();
-                console.log(userDB);
                 res.send({ ok: true, userDB: userDB });
                 _b.label = 6;
             case 6: return [3 /*break*/, 8];
@@ -143,11 +140,9 @@ exports.getUser = function (req, res) { return __awaiter(void 0, void 0, void 0,
                     throw new Error("no token");
                 cookie = jwt.decode(token, secret);
                 email = cookie.email;
-                console.log(email);
                 return [4 /*yield*/, userModel_1.UserModelDB.findOne({ email: email })];
             case 1:
                 userDB = _a.sent();
-                console.log(userDB);
                 res.send(userDB);
                 return [3 /*break*/, 3];
             case 2:
@@ -163,9 +158,7 @@ exports.addArtistFunc = function (req, res) { return __awaiter(void 0, void 0, v
     var artistName;
     return __generator(this, function (_a) {
         try {
-            console.log("addArtistFunc started");
             artistName = req.artistName;
-            console.log(artistName);
             res.send({ artistName: artistName });
         }
         catch (error) {
@@ -173,5 +166,27 @@ exports.addArtistFunc = function (req, res) { return __awaiter(void 0, void 0, v
             res.send({ error: error.message });
         }
         return [2 /*return*/];
+    });
+}); };
+exports.getArtistData = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var artistName, artistData, error_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                artistName = req.query.artist;
+                return [4 /*yield*/, userModel_1.UserModelDB.findOne({ artistName: artistName })];
+            case 1:
+                artistData = _a.sent();
+                console.log(artistData);
+                res.send({ artistData: artistData });
+                return [3 /*break*/, 3];
+            case 2:
+                error_4 = _a.sent();
+                console.error(error_4);
+                res.send({ error: error_4.message });
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
     });
 }); };
