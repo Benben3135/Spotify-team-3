@@ -9,19 +9,19 @@ body::-webkit-scrollbar {
   transition: all 0.2s ease-in-out;
 }
 body::-webkit-scrollbar-track {
-  background: #4976f3;
+  background: #a3aecc;
   margin-block: 0.5em;
   border-radius: 10px;
   transition: all 0.2s ease-in-out;
 }
 body::-webkit-scrollbar-thumb {
-  background: rgba(25, 54, 72, 0.7);
+  background: rgba(160, 167, 171, 0.7);
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
 body::-webkit-scrollbar-thumb:hover {
-  background: #070326;
+  background: #110f0d;
 }
 
 .upperBar {
@@ -81,9 +81,9 @@ body::-webkit-scrollbar-thumb:hover {
   justify-content: center;
   width: 50vw;
   height: fit-content;
-  background-color: rgba(125, 125, 228, 0.705);
+  background-color: #5b5454;
   border-radius: 10px;
-  z-index: 20;
+  z-index: 100;
   padding: 20px;
   border: 2px solid;
   animation: colorfull 4s infinite alternate;
@@ -150,27 +150,6 @@ body::-webkit-scrollbar-thumb:hover {
   z-index: 3;
   border: 2px solid black;
   margin-top: 10px;
-  overflow-x: scroll;
-  overflow-y: hidden;
-}
-.songsBox::-webkit-scrollbar {
-  width: 0.6em;
-  transition: all 0.2s ease-in-out;
-}
-.songsBox::-webkit-scrollbar-track {
-  background: #4976f3;
-  margin-block: 0.5em;
-  border-radius: 10px;
-  transition: all 0.2s ease-in-out;
-}
-.songsBox::-webkit-scrollbar-thumb {
-  background: rgba(25, 54, 72, 0.7);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-.songsBox::-webkit-scrollbar-thumb:hover {
-  background: #070326;
 }
 .songsBox__song {
   display: flex;
@@ -180,8 +159,8 @@ body::-webkit-scrollbar-thumb:hover {
   width: 19vh;
   height: 98%;
   border-radius: 10px;
-  z-index: 3;
-  border: 2px solid black;
+  z-index: 20;
+  box-shadow: 2px 2px 10px #cec4c4;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 }
@@ -209,8 +188,27 @@ body::-webkit-scrollbar-thumb:hover {
   margin: 0;
 }
 
+.shuffle {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: #b1d1f1;
+  background: linear-gradient(90deg, rgba(177, 209, 241, 0.2609418768) 20%, rgba(137, 230, 54, 0.4542191877) 84%);
+  margin-top: 10vh;
+  margin-bottom: 10vh;
+  box-shadow: 2px 2px 10px aliceblue;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.shuffle:hover {
+  transform: scale(1.1);
+  background: #1787f6;
+  background: linear-gradient(90deg, rgba(23, 135, 246, 0.2609418768) 20%, rgba(22, 29, 217, 0.4542191877) 84%);
+}
+
 #reccomended {
-  background-color: rgba(170, 206, 235, 0.71);
+  background: #b1d1f1;
+  background: linear-gradient(90deg, rgba(177, 209, 241, 0.2609418768) 20%, rgba(137, 230, 54, 0.4542191877) 84%);
 }
 
 #genre {

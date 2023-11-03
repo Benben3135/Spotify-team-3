@@ -22,33 +22,41 @@
 
     }
 }
-@mixin icon{
+
+@mixin icon {
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-&:hover{
-    transform: scale(1.1);
-    animation: colorfullBtn 2s infinite alternate;
-}
-@keyframes colorfullBtn {
-    0% {
-        color: rgb(255, 0, 0);
+
+    &:hover {
+        transform: scale(1.1);
+        animation: colorfullBtn 2s infinite alternate;
     }
-    20% {
-        color: rgb(255, 255, 0);
+
+    @keyframes colorfullBtn {
+        0% {
+            color: rgb(255, 0, 0);
+        }
+
+        20% {
+            color: rgb(255, 255, 0);
+        }
+
+        40% {
+            color: rgb(0, 255, 0);
+        }
+
+        60% {
+            color: rgb(0, 255, 255);
+        }
+
+        80% {
+            color: rgb(0, 0, 255);
+        }
+
+        100% {
+            color: rgb(255, 0, 255);
+        }
     }
-    40% {
-        color: rgb(0, 255, 0);
-    }
-    60% {
-        color: rgb(0, 255, 255);
-    }
-    80% {
-        color: rgb(0, 0, 255);
-    }
-    100% {
-        color: rgb(255, 0, 255);
-    }
-}
 }
 
 
@@ -58,16 +66,18 @@
         width: 0.6em;
         transition: all 0.2s ease-in-out;
     }
+
     &::-webkit-scrollbar-track {
-        background: hsl(224, 88%, 62%);
+        background: hsl(224, 29%, 72%);
         margin-block: 0.5em;
         border-radius: 10px;
         transition: all 0.2s ease-in-out;
 
 
     }
+
     &::-webkit-scrollbar-thumb {
-        background: hsla(203, 48%, 19%, 0.7);
+        background: hsla(202, 6%, 65%, 0.7);
         border-radius: 10px;
         cursor: pointer;
         transition: all 0.2s ease-in-out;
@@ -76,8 +86,9 @@
 
 
     }
+
     &::-webkit-scrollbar-thumb:hover {
-        background: hsl(247, 86%, 8%);
+        background: hsl(30, 13%, 6%);
     }
 }
 
@@ -91,30 +102,31 @@ body {
 
 }
 
-.upperBar{
-display: flex;
-flex-direction: row;
-align-items: center;
-justify-content: space-around;
-width: fit-content;
-height: 4vh;
-position: fixed;
-top: 2vh;
-left: 2vw;
-z-index: 4;
-border: 2px solid black;
-border-radius: 10px;
-background-color: rgba(252, 252, 252, 0.082);
-backdrop-filter: blur(10px);
-padding: 20px;
-gap: 20px;
-&__icon{
-    @include icon;
-}
+.upperBar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: fit-content;
+    height: 4vh;
+    position: fixed;
+    top: 2vh;
+    left: 2vw;
+    z-index: 4;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: rgba(252, 252, 252, 0.082);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+    gap: 20px;
+
+    &__icon {
+        @include icon;
+    }
 
 }
 
-.docs{
+.docs {
     display: none;
     position: absolute;
     right: 25vw;
@@ -124,47 +136,56 @@ gap: 20px;
     justify-content: center;
     width: 50vw;
     height: fit-content;
-    background-color: rgba(125, 125, 228, 0.705);
+    background-color: rgb(91 84 84);
     border-radius: 10px;
-    z-index: 20;
+    z-index: 100;
     padding: 20px;
     border: 2px solid;
     animation: colorfull 4s infinite alternate;
+
     @keyframes colorfull {
         0% {
             border-color: rgb(255, 0, 0);
         }
+
         20% {
             border-color: rgb(255, 255, 0);
         }
+
         40% {
             border-color: rgb(0, 255, 0);
         }
+
         60% {
             border-color: rgb(0, 255, 255);
         }
+
         80% {
             border-color: rgb(0, 0, 255);
         }
+
         100% {
             border-color: rgb(255, 0, 255);
         }
     }
-    &__header{
+
+    &__header {
         font-family: fantasy;
         font-size: 30px;
         color: white;
         text-shadow: 0 0 10px black;
         margin: 0;
     }
-    &__text{
+
+    &__text {
         font-family: fantasy;
         font-size: 17px;
         color: white;
         text-shadow: 0 0 10px black;
         margin: 0;
     }
-    &__user{
+
+    &__user {
         margin-top: 20px;
         font-family: fantasy;
         font-size: 15px;
@@ -174,14 +195,15 @@ gap: 20px;
     }
 }
 
-.boxHeader{
+.boxHeader {
     font-family: fantasy;
     font-size: 30px;
     color: white;
     text-shadow: 0 0 10px black;
     margin-top: 20px;
 }
-.songsBox{
+
+.songsBox {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -192,62 +214,85 @@ gap: 20px;
     z-index: 3;
     border: 2px solid black;
     margin-top: 10px;
-    overflow-x: scroll;
-    overflow-y: hidden;
-    @include scrollbar;
 
-    &__song{
+
+    &__song {
         display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 19vh;
-    height: 98%;
-    border-radius: 10px;
-    z-index: 3;
-    border: 2px solid black;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    &:hover{
-        transform: scale(1.1);
-    }
-    &__img{
-        width: 100%;
-        height: 70%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 19vh;
+        height: 98%;
         border-radius: 10px;
-        object-fit: cover;
-    }
-    &__name{
-        font-family: fantasy;
-        font-size: 20px;
-        color: white;
-        text-shadow: 0 0 10px black;
-        margin: 0;
-    }
-    &__artist{
-        font-family: fantasy;
-        font-size: 15px;
-        color: white;
-        text-shadow: 0 0 10px black;
-        margin: 0;
+        z-index: 20;
+        box-shadow: 2px 2px 10px rgb(206, 196, 196);
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+
+        &__img {
+            width: 100%;
+            height: 70%;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        &__name {
+            font-family: fantasy;
+            font-size: 20px;
+            color: white;
+            text-shadow: 0 0 10px black;
+            margin: 0;
+        }
+
+        &__artist {
+            font-family: fantasy;
+            font-size: 15px;
+            color: white;
+            text-shadow: 0 0 10px black;
+            margin: 0;
+        }
     }
 }
+
+.shuffle {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgb(177, 209, 241);
+    background: linear-gradient(90deg, rgba(177, 209, 241, 0.26094187675070024) 20%, rgba(137, 230, 54, 0.4542191876750701) 84%);
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+    box-shadow: 2px 2px 10px aliceblue;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+    &:hover {
+        transform: scale(1.1);
+        background: rgb(23, 135, 246);
+        background: linear-gradient(90deg, rgba(23, 135, 246, 0.26094187675070024) 20%, rgba(22, 29, 217, 0.4542191876750701) 84%);
+    }
+
 }
-
-
 
 
 
 
 // id's
-#reccomended{
-    background-color:rgb(170 206 235 / 71%);
+#reccomended {
+    background: rgb(177, 209, 241);
+    background: linear-gradient(90deg, rgba(177, 209, 241, 0.26094187675070024) 20%, rgba(137, 230, 54, 0.4542191876750701) 84%);
 }
-#genre{
-    background-color:rgb(89 131 101 / 71%);
+
+#genre {
+    background-color: rgb(89 131 101 / 71%);
 }
-#liked{
-    background-color:rgb(213 130 125 / 71%);
+
+#liked {
+    background-color: rgb(213 130 125 / 71%);
 }
 
 #backVideo {
@@ -257,15 +302,17 @@ gap: 20px;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    z-index: -1;#backVideo {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
     z-index: -1;
-}
+
+    #backVideo {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+    }
 }
 
 #logo {
@@ -298,14 +345,15 @@ gap: 20px;
     }
 }
 
-#uploadBtn{
-    display: none;
-}
-#artistPageBtn{
+#uploadBtn {
     display: none;
 }
 
-#creatorTXT{
+#artistPageBtn {
+    display: none;
+}
+
+#creatorTXT {
     display: none;
     color: rgb(235, 36, 36);
     text-shadow: 0 0 10px black;
@@ -321,8 +369,8 @@ gap: 20px;
     transition: all 0.2s ease-in-out;
     margin: auto;
 
-    &:hover{
-       background-color: rgb(173, 224, 224);
+    &:hover {
+        background-color: rgb(173, 224, 224);
     }
 
     @keyframes move {
