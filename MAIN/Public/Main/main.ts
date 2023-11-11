@@ -30,7 +30,7 @@ isArtist();
 async function isArtist() {
     const response = await fetch("http://localhost:3000/API/users/addArtistFunc");
     const { artistName } = await response.json();
-    if (!artistName)("no admin")
+    if (!artistName) ("no admin")
     else {
         buildArtistUtilities(artistName)
     }
@@ -105,7 +105,7 @@ async function docs() {
 //getting the songs from the server:
 
 function renderSong(song, filename) {
-    debugger;
+    
 
     const artist = song.artist;
     const name = song.name;
@@ -168,13 +168,13 @@ function renderLikedSongs(song, filename) {
 }
 
 async function songPage(artist, name, filename) {
-    debugger;
+    
     await addGenreAlgorithm(filename);
     await addStamina(filename);
     window.location.href = `../songPage/songPage.html?artist=${artist}&name=${name}&filename=${filename}`;
 }
 async function addGenreAlgorithm(filename) {
-    debugger;
+    
     const response = await fetch(`http://localhost:3000/API/songsAlgorithms/addGenereLiked`, {
         method: "POST",
         headers: {
@@ -294,7 +294,7 @@ function renderGenreSongs(song, filename) {
 //stamina:
 
 async function addStamina(filename) {
-    debugger;
+    
     const response = await fetch(`http://localhost:3000/API/songsAlgorithms/addStamina`, {
         method: "POST",
         headers: {
@@ -323,32 +323,59 @@ async function getStaminas() {
     const dataFromServer = await response.json();
     let staminasArr = []
     dataFromServer.forEach(song => {
-        debugger;
+        
         delete song.email;
         delete song.__v;
         delete song._id;
         staminasArr.push(song)
     })
     console.log(staminasArr)
-   const sortedArr =  staminasArr.sort((a, b) => b.stamina - a.stamina);
-   const length = sortedArr.length;
-   for(let i=0 ; i<length; i++){
-    getArtistSongs(sortedArr[i])
-   }
+    const sortedArr = staminasArr.sort((a, b) => b.stamina - a.stamina);
+    const length = sortedArr.length;
+    for (let i = 0; i < length; i++) {
+        getArtistSongs(sortedArr[i])
+    }
 }
 
-async function getArtistSongs(song){
-const artist = song.artistName;
-const response = await fetch(`http://localhost:3000/get-artist-songs?artist=${artist}`)
-const data = await response.json()
-const length = data.length
-function getRandomInt(x: number): number {
-    return Math.floor(Math.random() * (x + 1));
-}
-debugger;
-const randomNumber = getRandomInt(length);
-const songToRender = data[randomNumber]
-console.log(songToRender)
+async function getArtistSongs(song) {
+    const artist = song.artistName;
+    const response = await fetch(`http://localhost:3000/get-artist-songs?artist=${artist}`)
+    const data = await response.json()
+    const length = data.length
+    function getRandomInt(x: number): number {
+        return Math.floor(Math.random() * (x + 1));
+    }
+    
+    const randomNumber = getRandomInt(length);
+    const songToRender = data[randomNumber]
+    console.log(songToRender)
 
-renderSong(songToRender.metadata, songToRender.filename)
+    renderSong(songToRender.metadata, songToRender.filename)
+}
+
+//shuffle:
+
+async function shuffle() {
+    try {
+        const response = await fetch(`http://localhost:3000/get-songs`)
+        const data = await response.json()
+        const randomArr = randomSortNumbers(data.length);
+        const randomIndex = randomArr[0];
+        const randomSong = data[randomIndex];
+        console.log(randomSong)
+        songPage(randomSong.metadata.artist ,randomSong.metadata.name, randomSong.filename)
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function randomSortNumbers(limit: number): number[] {
+    let numbers = Array.from({length: limit + 1}, (_, index) => index);
+
+    for (let i = numbers.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+    }
+
+    return numbers;
 }

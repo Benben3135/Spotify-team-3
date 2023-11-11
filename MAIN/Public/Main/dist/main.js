@@ -158,7 +158,6 @@ function docs() {
 }
 //getting the songs from the server:
 function renderSong(song, filename) {
-    debugger;
     var artist = song.artist;
     var name = song.name;
     var img = song.img;
@@ -217,9 +216,7 @@ function songPage(artist, name, filename) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    debugger;
-                    return [4 /*yield*/, addGenreAlgorithm(filename)];
+                case 0: return [4 /*yield*/, addGenreAlgorithm(filename)];
                 case 1:
                     _a.sent();
                     return [4 /*yield*/, addStamina(filename)];
@@ -236,15 +233,13 @@ function addGenreAlgorithm(filename) {
         var response, data;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    debugger;
-                    return [4 /*yield*/, fetch("http://localhost:3000/API/songsAlgorithms/addGenereLiked", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({ filename: filename })
-                        })];
+                case 0: return [4 /*yield*/, fetch("http://localhost:3000/API/songsAlgorithms/addGenereLiked", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ filename: filename })
+                    })];
                 case 1:
                     response = _a.sent();
                     // Handle non-200 HTTP response status
@@ -396,15 +391,13 @@ function addStamina(filename) {
         var response, data;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    debugger;
-                    return [4 /*yield*/, fetch("http://localhost:3000/API/songsAlgorithms/addStamina", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({ filename: filename })
-                        })];
+                case 0: return [4 /*yield*/, fetch("http://localhost:3000/API/songsAlgorithms/addStamina", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ filename: filename })
+                    })];
                 case 1:
                     response = _a.sent();
                     // Handle non-200 HTTP response status
@@ -437,7 +430,6 @@ function getStaminas() {
                     dataFromServer = _a.sent();
                     staminasArr = [];
                     dataFromServer.forEach(function (song) {
-                        debugger;
                         delete song.email;
                         delete song.__v;
                         delete song._id;
@@ -471,7 +463,6 @@ function getArtistSongs(song) {
                 case 2:
                     data = _a.sent();
                     length = data.length;
-                    debugger;
                     randomNumber = getRandomInt(length);
                     songToRender = data[randomNumber];
                     console.log(songToRender);
@@ -480,4 +471,42 @@ function getArtistSongs(song) {
             }
         });
     });
+}
+//shuffle:
+function shuffle() {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, data, randomArr, randomIndex, randomSong, error_2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, fetch("http://localhost:3000/get-songs")];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    randomArr = randomSortNumbers(data.length);
+                    randomIndex = randomArr[0];
+                    randomSong = data[randomIndex];
+                    console.log(randomSong);
+                    songPage(randomSong.metadata.artist, randomSong.metadata.name, randomSong.filename);
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_2 = _a.sent();
+                    console.error(error_2);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+function randomSortNumbers(limit) {
+    var _a;
+    var numbers = Array.from({ length: limit + 1 }, function (_, index) { return index; });
+    for (var i = numbers.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        _a = [numbers[j], numbers[i]], numbers[i] = _a[0], numbers[j] = _a[1];
+    }
+    return numbers;
 }

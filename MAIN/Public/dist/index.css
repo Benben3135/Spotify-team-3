@@ -23,9 +23,9 @@ body {
   background-color: transparent;
   backdrop-filter: blur(20px);
   border-radius: 10px;
-  padding: 20px;
+  padding: 90px;
   width: 20vw;
-  height: 44vh;
+  height: fit-content;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
   animation: move 10s infinite alternate;
 }
@@ -83,7 +83,7 @@ input::placeholder {
 }
 
 #submit {
-  width: 4vw;
+  width: fit-content;
   height: 4vh;
   background-color: #3c413b;
   border-radius: 20px;
@@ -110,7 +110,7 @@ input::placeholder {
 }
 
 #register {
-  width: 4vw;
+  width: fit-content;
   height: 4vh;
   background-color: #3c413b;
   border-radius: 20px;
@@ -121,8 +121,8 @@ input::placeholder {
   color: aliceblue;
   transition: all 0.2s ease-in-out;
   margin-top: 10px;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin-top: 20px;
+  width: fit-content;
 }
 #register:hover {
   background-color: rgba(205, 214, 236, 0.8);

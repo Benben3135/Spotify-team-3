@@ -207,3 +207,48 @@ function checkIfLikedTurnRed() {
         });
     });
 }
+function songPage(artist, name, filename) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            window.location.href = "../songPage/songPage.html?artist=" + artist + "&name=" + name + "&filename=" + filename;
+            return [2 /*return*/];
+        });
+    });
+}
+function shuffle() {
+    return __awaiter(this, void 0, void 0, function () {
+        var response, data, randomArr, randomIndex, randomSong, error_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 4]);
+                    return [4 /*yield*/, fetch("http://localhost:3000/get-songs")];
+                case 1:
+                    response = _a.sent();
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    data = _a.sent();
+                    randomArr = randomSortNumbers(data.length);
+                    randomIndex = randomArr[0];
+                    randomSong = data[randomIndex];
+                    console.log(randomSong);
+                    songPage(randomSong.metadata.artist, randomSong.metadata.name, randomSong.filename);
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _a.sent();
+                    console.error(error_1);
+                    return [3 /*break*/, 4];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+function randomSortNumbers(limit) {
+    var _a;
+    var numbers = Array.from({ length: limit + 1 }, function (_, index) { return index; });
+    for (var i = numbers.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        _a = [numbers[j], numbers[i]], numbers[i] = _a[0], numbers[j] = _a[1];
+    }
+    return numbers;
+}

@@ -259,17 +259,22 @@ body {
 }
 
 .shuffle {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
-    background: rgb(177, 209, 241);
-    background: linear-gradient(90deg, rgba(177, 209, 241, 0.26094187675070024) 20%, rgba(137, 230, 54, 0.4542191876750701) 84%);
+    background-color: transparent;
+    backdrop-filter: blur(10px);
     margin-top: 10vh;
     margin-bottom: 10vh;
     box-shadow: 2px 2px 10px aliceblue;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: fantasy;
+    color: aliceblue;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
-
     &:hover {
         transform: scale(1.1);
         background: rgb(23, 135, 246);
@@ -278,6 +283,14 @@ body {
 
 }
 
+.shuffleWrapper{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
 
 
 

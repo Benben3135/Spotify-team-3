@@ -87,6 +87,29 @@ audio::-webkit-media-controls-panel {
   color: red;
 }
 
+.forwardIcon {
+  cursor: pointer;
+  position: absolute;
+  bottom: 8vh;
+  width: 4vw;
+  left: 48vw;
+  transition: all 200ms ease-in-out;
+}
+.forwardIcon:hover {
+  transform: scale(1.2);
+}
+
+.houseIcon {
+  cursor: pointer;
+  position: absolute;
+  top: 3vh;
+  left: 4vw;
+  transition: all 200ms ease-in-out;
+}
+.houseIcon:hover {
+  transform: scale(1.2);
+}
+
 #backVideo {
   position: fixed;
   top: 0;

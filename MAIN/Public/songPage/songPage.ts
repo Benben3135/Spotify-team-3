@@ -155,3 +155,34 @@ async function checkIfLikedTurnRed() {
     }
    
 }
+
+
+async function songPage(artist, name, filename) {
+  window.location.href = `../songPage/songPage.html?artist=${artist}&name=${name}&filename=${filename}`;
+}
+
+
+async function shuffle() {
+  try {
+      const response = await fetch(`http://localhost:3000/get-songs`)
+      const data = await response.json()
+      const randomArr = randomSortNumbers(data.length);
+      const randomIndex = randomArr[0];
+      const randomSong = data[randomIndex];
+      console.log(randomSong)
+      songPage(randomSong.metadata.artist ,randomSong.metadata.name, randomSong.filename)
+  } catch (error) {
+      console.error(error);
+  }
+}
+
+function randomSortNumbers(limit: number): number[] {
+  let numbers = Array.from({length: limit + 1}, (_, index) => index);
+
+  for (let i = numbers.length - 1; i > 0; i--) {
+      let j = Math.floor(Math.random() * (i + 1));
+      [numbers[i], numbers[j]] = [numbers[j], numbers[i]];
+  }
+
+  return numbers;
+}
