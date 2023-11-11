@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./dist/index.js" defer></script>
+    <link rel="stylesheet" href="./dist/index.css">
+    <title>SIGNIN</title>
+</head>
+<body>
+<div class="signIn">
+    <form onsubmit="handleSignIn(event)">
+        <img id="logo" src="./Files_To_Use/melodica__1_-removebg-preview.png" alt="">
+        <label for="email">email</label>
+        <input type="text" name="email" id="email" placeholder="email">
+        <label for="password">password</label>
+        <input type="password" name="password" id="password" placeholder="password">
+        <h2 id="alert"></h2>
+        <input type="submit" value="submit" id="submit">
+
+    </form>
+    <button id="register" onclick="registerPage()">Register</button>
+
+</div>
+</br>
+</body>
+</html>
